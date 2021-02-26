@@ -1,0 +1,29 @@
+{% comment %}
+	SEO Manager - tag search v2.0
+	purpose: gather all tags used in a collection
+	usage: /search?view=SEOManagerTags&q=collection-slug
+	Copyright (c) venntov
+	https://venntov.com / http://SEOManager.com
+	Josh Highland
+
+	NOTICE: All information contained herein is property of venntov.
+	The intellectual and technical concepts contained herein are proprietary
+	to venntov and are protected by trade secret and copyright law.
+	Reproduction of this code is strictly forbidden unless prior written
+	permission is obtained from venntov. If violated, legal action
+	will be taken. Just don't do it.
+{% endcomment %}
+
+{% layout none %}
+
+{% assign output = "" %}
+
+  {% for collection in collections %}
+    {% if collection.handle == search.terms %}
+      {% if collection.all_tags.size > 0 %}
+        {% capture output %}{{ collection.all_tags | join: ', ' }}{% endcapture %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+{{ output | replace: ', ', ','}}

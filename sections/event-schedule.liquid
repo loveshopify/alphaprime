@@ -1,0 +1,117 @@
+{% comment %}
+  Event Schedule section
+{% endcomment %}
+
+{% if section.blocks.size > 0 %}
+<div class="ap-event-schedule" style="{% if section.settings.background_image != empty %}background-image: url({{ section.settings.background_image | img_url: 'master' }});{% endif %}{% if section.settings.background_color != empty %}background-color: {{ section.settings.background_color }};{% endif %}">
+  <div class="container">
+    {% if section.settings.footer_content != empty %}
+      <div class="ap-event-schedule--header">{{ section.settings.header_content }}</div>
+    {% endif %}
+    
+    <div class="ap-event-schedule--events">
+      {% for block in section.blocks %}
+      <div class="ap-event-schedule--event{% if block.settings.event_status == 'past' %} ap-event-schedule--past{% else %} ap-event-schedule--upcoming{% endif %}"{% if forloop.index0 > 5 %} style="display: none;"{% endif %}>
+        <div class="row">
+          <div class="one-fourth small-one-half column"><b>{{ block.settings.event_name }}</b></div>
+          <div class="one-fourth small-one-half column"><b>{{ block.settings.event_description }}</b></div>
+          <div class="one-fourth small-one-half column">{{ block.settings.event_date }}</div>
+          <div class="one-fourth small-one-half column">{{ block.settings.event_location }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    {% if section.settings.footer_content != empty %}
+      <div class="ap-event-schedule--footer">{{ section.settings.footer_content }}</div>
+    {% endif %}
+  </div>
+</div>
+<script>
+  jQuery(document).ready(function($) {
+    $('.ap-event-schedule a[href="#view-more"]').on('click', function(event) {
+      event.preventDefault();
+      var $this = $(this);
+      var events = $this.parents('.ap-event-schedule').find('.ap-event-schedule--event');
+      if (events.filter(':hidden').length) {
+        events.filter(':hidden').slice(0, 3).slideDown(300, 'linear');
+        if (!events.filter(':hidden').length) {
+          $this.hide()
+        }
+      }
+    })
+  })
+</script>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Event Schedule",
+    "class": "ap-event-schedule-section",
+    "blocks": [
+      {
+        "type": "event",
+        "name": "Event",
+        "settings": [
+          {
+            "type": "text",
+            "id": "event_name",
+            "label": "Name"
+          },
+          {
+            "type": "textarea",
+            "id": "event_description",
+            "label": "Description"
+          },
+          {
+            "type": "text",
+            "id": "event_date",
+            "label": "Date"
+          },
+          {
+            "type": "text",
+            "id": "event_location",
+            "label": "Location"
+          },
+          {
+            "type": "select",
+            "id": "event_status",
+            "label": "Status",
+            "options": [
+              {
+                "value": "upcoming",
+                "label": "Upcoming"
+              },
+              {
+                "value": "past",
+                "label": "Past"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background Image"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color"
+      },
+      {
+        "type": "textarea",
+        "id": "header_content",
+        "label": "Header Content"
+      },
+      {
+        "type": "textarea",
+        "id": "footer_content",
+        "label": "Footer Content"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,95 @@
+{% comment %}
+  Banner
+{% endcomment %}
+
+{% assign size1 = '480x' %}
+{% assign size2 = '765x' %}
+{% assign size3 = '900x' %}
+{% assign size4 = '1000x' %}
+{% assign size5 = '1100x' %}
+{% assign size6 = '1300x' %}
+{% assign size7 = '1500x' %}
+{% assign size8 = '1700x' %}
+{% assign size9 = '1900x' %}
+{% assign size10 = '2000x' %}
+
+{% if section.settings.image_desktop != nil %}
+{%- unless section.settings.full_width -%}<div class="container">{%- endunless -%}
+<div class="ap-banner">
+  {% if section.settings.link != blank %}
+  <a href="{{ section.settings.link }}">
+  {% endif %}
+  <img
+    src="{{ section.settings.image_desktop | img_url: size5 }}"
+    sizes="100vw"
+    srcset="
+      {{ section.settings.image_desktop | img_url: size5 }} {{ size5 | replace: 'x', 'w' }},
+      {{ section.settings.image_desktop | img_url: size6 }} {{ size6 | replace: 'x', 'w' }},
+      {{ section.settings.image_desktop | img_url: size7 }} {{ size7 | replace: 'x', 'w' }},
+      {{ section.settings.image_desktop | img_url: size8 }} {{ size8 | replace: 'x', 'w' }},
+      {{ section.settings.image_desktop | img_url: size9 }} {{ size9 | replace: 'x', 'w' }},
+      {{ section.settings.image_desktop | img_url: size10 }} {{ size10 | replace: 'x', 'w' }}
+    "
+    alt="{{ section.settings.image_desktop.alt | escape }}"
+  />
+  {% if section.settings.image_mobile != nil %}
+  <img
+    src="{{ section.settings.image_mobile | img_url: size1 }}"
+    sizes="100vw"
+    srcset="
+      {{ section.settings.image_mobile | img_url: size1 }} {{ size1 | replace: 'x', 'w' }},
+      {{ section.settings.image_mobile | img_url: size2 }} {{ size2 | replace: 'x', 'w' }},
+      {{ section.settings.image_mobile | img_url: size3 }} {{ size3 | replace: 'x', 'w' }},
+      {{ section.settings.image_mobile | img_url: size4 }} {{ size4 | replace: 'x', 'w' }},
+    "
+    alt="{{ section.settings.image_mobile.alt | escape }}"
+  />
+  {% endif %}
+  {% if section.settings.link != blank %}
+  </a>
+  {% endif %}
+
+  {% if section.settings.text_overlay != empty %}
+    <div class="ap-banner--overlay">{{ section.settings.text_overlay }}</div>
+  {% endif %}
+</div>
+{%- unless section.settings.full_width -%}</div>{%- endunless -%}
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Banner",
+    "class": "ap-banner-section",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image_mobile",
+        "label": "Image Mobile"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_desktop",
+        "label": "Image Desktop"
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      },
+      {
+        "type": "textarea",
+        "id": "text_overlay",
+        "label": "Text Overlay"
+      }
+    ],
+    "presets": [{
+      "name": "Banner",
+      "category": "Image"
+    }]
+  }
+{% endschema %}

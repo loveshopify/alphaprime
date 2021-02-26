@@ -1,0 +1,78 @@
+{% assign collection_handles = product.collections | map: 'handle' %}
+
+<div class="thumbnail-overlay">
+  <a href="{% if variant_url and variant_url != '' %}{{ variant_url }}{% else %}{{ product.url | within: collection }}{% endif %}" itemprop="url" class="hidden-product-link">{{ product.title }}</a>
+  <div class="info">
+    {% if settings.thumbnail_hover_enabled and settings.quick_shop_enabled %}
+      {% include "product-info" %}
+      {% include 'quick-shop-button' %}
+    {% elsif settings.thumbnail_hover_enabled %}
+      {% include "product-info" %}
+    {% elsif settings.quick_shop_enabled %}
+      {% include 'quick-shop-button' %}
+    {% endif %}
+  </div>
+  
+  {% unless collection_handles contains 'coming-soon' or hide_sizes %}
+    {% assign pro_index_size = '' %}
+    
+    {% for op in product.options %}
+      {% assign op_handle = op | downcase %}
+      {% if op_handle contains 'size' or op_handle contains 'sizes' %}
+        {% assign pro_index_size = forloop.index0 %}
+      {% endif %}
+    {% endfor %}
+    
+    {% if pro_index_size != '' %}
+      <div class="variant-size">
+        <form method="post" action="/cart/add" id="{{product.id}}" enctype="multipart/form-data">
+          {% assign pro_color_vari = product_vari.options[pro_index] %}
+          
+          <select name="id" class="hidden">
+            {% for size_vari in product.variants %}
+              {% assign pro_size_vari = size_vari.options[pro_index_size] %}
+              {% assign color_vari = size_vari.options[pro_index] %}
+              {% if color_vari == pro_color_vari %}
+                {% if size_vari.available %}
+                  <option value="{{ size_vari.id }}" data-sku="{{ size_vari.sku }}" data-size="{{pro_size_vari}}">{{ size_vari.title }}</option>
+                {% else %}
+                  <option value="{{ size_vari.id }}" disabled="disabled">Sold Out</option>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </select>
+          
+          <div class="swatch_options">
+            <div class="swatch clearfix"> 
+              {% for size_vari in product.variants %}
+                {% assign pro_size_vari = size_vari.options[pro_index_size] %}
+                {% assign color_vari = size_vari.options[pro_index] %}
+                {% if color_vari == pro_color_vari %}
+                  <div data-value="{{pro_size_vari}}" class="swatch-element s-swatch {% if size_vari.available %}available{% else %}soldout{% endif %}"> 
+                    <label>{{ pro_size_vari }} <span class="crossed-out"></span></label>
+                    <svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" class="checkmark"><path fill="none" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M9,17l3.9,3.9c0.1,0.1,0.2,0.1,0.3,0L23,11"/></svg>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          
+          <input type="submit" value="add" class="hidden" />
+        </form>
+      </div>
+    {% endif %}
+  {% endunless %}
+</div>
+<div class="banner_holder">
+  {% if product.available %}
+    {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
+      <div class="sale_banner thumbnail_banner">{{ 'collections.general.sale' | t }}</div>
+    {% endif %}
+  {% endif %}
+  {% if new_release_banner %}
+    <div class="new_banner thumbnail_banner">{{ 'collections.general.new' | t }}</div>
+  {% endif %}
+  {% if pre_order_banner %}
+    <div class="preorder_banner thumbnail_banner">{{ 'collections.general.pre_order' | t }}</div>
+  {% endif %}
+</div>

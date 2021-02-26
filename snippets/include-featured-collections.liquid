@@ -1,0 +1,24 @@
+
+{% assign collection_style = 'slider' %}
+{% assign products_per = products_per %}
+{% assign products_limit = product_count %}
+{% assign products_length = product_count %}
+
+
+{%- assign section_onboarding = false -%}
+
+{% assign limit = products_limit %}
+
+{% if collection_style == 'slider' %}
+
+  {% assign products = collection.products %}
+  {% assign per_slide = products_per %}
+
+  <div class="container full-width">
+    <div class="js-product-slider homepage-product-slider {% if per_slide == 2 or per_slide == 4 or per_slide == 6 %}even-num-slides{% endif %}">
+        {% if products_limit > 0 %}
+          {% include 'product-slider-tab-swatch', per_slide: products_per, products_length: products_length, featured_collection: collection  %}
+        {% endif %}
+    </div>
+  </div>
+{% endif %}

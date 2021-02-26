@@ -1,0 +1,28 @@
+{%- comment -%}
+This template has been created automatically by one of the Maestrooo's application (for instance: SuperFields...).
+
+We use those templates to provide additional features to our apps, and you SHOULD NOT delete this template if you
+are still using our apps. Otherwise, the apps may not work as expected.
+{%- endcomment -%}
+
+{%- layout none -%}
+
+{%- capture all_types -%}
+  [
+    {%- for type in shop.types -%}
+      {
+        "object": "product_type",
+        "title": {{ type | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+{%- endcapture -%}
+
+callback_maestrooo_all_types_{{ search.terms | md5 }}({
+  "object": "list",
+  "data": {{ all_types }},
+  "meta": {
+    "total_count": {{ shop.types.size }},
+    "has_more": false 
+  }
+})

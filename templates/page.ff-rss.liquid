@@ -1,0 +1,220 @@
+{% layout none %}<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" 
+     xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>{{shop.name | escape }} Products</title>  
+    <link>{{shop.secure_url}}</link>
+    <description>Free Feed for Facebook by Keeping Shop - The Developers of Pixel Perfect and Cross Sell - v1.0</description> 
+
+  {% if shop.metafields.facebookfeed.feedsettings != null %}	
+	{% assign feedsettings = shop.metafields.facebookfeed.feedsettings | remove: "[{" | remove: "}]" | strip | replace: '","', '"|||"' | split: '|||' %}		
+	{% for settingpair in feedsettings %}
+		{% assign setting = settingpair	| strip | split: " : " %}
+		{% capture main %}{{ setting[0] | replace: '"', ''}}{% endcapture %}
+        {% case main %}
+			{% when 'ff_feed_include_variants' %}
+				{% assign ff_variants = setting[1] | replace: '"', '' %}
+			{% when 'ff_feed_pagination' %}
+				{% assign ff_paginate = setting[1] | replace: '"', '' %}
+			{% when 'ff_feed_lowercase' %}
+				{% assign ff_lowercase = setting[1] | replace: '"', '' %}
+			{% when 'ff_feed_google_category' %}
+				{% assign ff_googlecategory = setting[1] | replace: '"', '' %}
+            {% when 'ff_feed_crop' %}
+				{% assign ff_crop = setting[1] | replace: '"', '' %}
+            {% when 'ff_feed_fbcustom' %}
+				{% assign ff_fbcustom = setting[1] | replace: '"', '' %}
+            {% when 'ff_feed_shopifypx' %}
+				{% assign ff_shopifypx = setting[1] | replace: '"', '' %}
+			{% endcase%}
+	{% endfor %}
+  
+  
+    {% else %}
+  
+    {% assign ff_paginate = '1000' %}
+    {% assign ff_variants = 'off' %}
+    
+{% endif %}  
+  
+          
+    {% if ff_fbcustom contains 'on' %}    
+
+    {% if shop.metafields.facebook.custom_label_0 != null %}
+    {% assign ff_label_0 = shop.metafields.facebook.custom_label_0 %}
+    {% else %}
+    {% assign ff_label_0 = 'Custom Label 0 is empty' %}
+    {% endif %}
+  
+    {% if shop.metafields.facebook.custom_label_1 != null %}
+    {% assign ff_label_1 = shop.metafields.facebook.custom_label_1 %}
+    {% else %}
+    {% assign ff_label_1 = 'Custom Label 1 is empty' %}
+    {% endif %}
+  
+    {% if shop.metafields.facebook.custom_label_2 != null %}
+    {% assign ff_label_2 = shop.metafields.facebook.custom_label_2 %}
+    {% else %}
+    {% assign ff_label_2 = 'Custom Label 2 is empty' %}
+    {% endif %}
+  
+    {% if shop.metafields.facebook.custom_label_3 != null %}
+    {% assign ff_label_3 = shop.metafields.facebook.custom_label_3 %}
+    {% else %}
+    {% assign ff_label_3 = 'Custom Label 3 is empty' %}
+    {% endif %}
+  
+    {% if shop.metafields.facebook.custom_label_4 != null %}
+    {% assign ff_label_4 = shop.metafields.facebook.custom_label_4 %}
+    {% else %}
+    {% assign ff_label_4 = 'Custom Label 4 is empty' %}
+    {% endif %}
+
+    {% endif %}
+  
+  
+  {% paginate collections.all.products by ff_paginate %}
+  
+  {% for product in collections.all.products %}
+  
+  {% if ff_variants contains 'on' %}
+ 
+  {% for variant in product.variants %}
+  <item>
+
+{% if ff_shopifypx contains 'on' %}
+<g:id>{{variant.id}}</g:id>
+{% else %}
+   <g:id>shopify_{{product.id}}_{{variant.id}}</g:id>
+{% endif %}
+
+   {% if ff_lowercase contains 'on' %}
+   <g:title><![CDATA[{{ product.title | strip_html | downcase | capitalize | strip_newlines | escape | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "u00c3u00a9", "e" | replace: '&quot;', '' | replace: "u00c3 ", "a" }}]]></g:title>
+   <g:description><![CDATA[{{ product.description | strip_html | downcase | capitalize | strip_newlines | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "..", ". " | replace: "  ", " " | replace: "u00e2u20acu02dc", "&#39;" | replace: "u00e2u20acu2122", "&#39;" | replace: "&#8216;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00e2u201eu00a2", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00c5u201c", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00cbu0153", "&#39;"  | replace: "u00c3u201au00c2u00b4", "&#39;" | replace: "u00e2u20acu0153", "&#34;" | replace: "u00e2u20ac ", "&#34;" | replace: "&#8211;", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20acu0153", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20ac ", "-" | replace: "u00e2u20acu201c", "&mdash;" | replace: "u00e2u20acu201d", "&mdash;" | replace: "%", "&#37;" | replace: "u00c3u201au00c2u00a9", "&copy;" | replace: "u00c3u201au00c2u00ae", "&reg;" | replace: "u00c3u00a2u00e2u20acu017eu00c2u00a2", "&trade;" | replace: "u00c3u201au00c2u00a3", "&pound;" | replace: "u00c3u00afu00c2u00bfu00c2u00ad", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2u00a2", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2 ", "&#39;" | replace: "&#233;", "e" | replace: "u00c3u00a9", "e" | replace: "u00c3 ", "a" | replace: "u00c3u00b3", "o" | replace: "u00c3u00aa", "e" | replace: "u00c3u0192u00cbu0153", "O" | replace: "&#8482;", "" | replace: "&#174;", "" }}]]></g:description>
+   {% else %}
+   <g:title><![CDATA[{{ product.title | strip_html | strip_newlines | escape | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "u00c3u00a9", "e" | replace: '&quot;', '' | replace: "u00c3 ", "a" }}]]></g:title>
+   <g:description><![CDATA[{{ product.description | strip_html | strip_newlines | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "..", ". " | replace: "  ", " " | replace: "u00e2u20acu02dc", "&#39;" | replace: "u00e2u20acu2122", "&#39;" | replace: "&#8216;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00e2u201eu00a2", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00c5u201c", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00cbu0153", "&#39;"  | replace: "u00c3u201au00c2u00b4", "&#39;" | replace: "u00e2u20acu0153", "&#34;" | replace: "u00e2u20ac ", "&#34;" | replace: "&#8211;", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20acu0153", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20ac ", "-" | replace: "u00e2u20acu201c", "&mdash;" | replace: "u00e2u20acu201d", "&mdash;" | replace: "%", "&#37;" | replace: "u00c3u201au00c2u00a9", "&copy;" | replace: "u00c3u201au00c2u00ae", "&reg;" | replace: "u00c3u00a2u00e2u20acu017eu00c2u00a2", "&trade;" | replace: "u00c3u201au00c2u00a3", "&pound;" | replace: "u00c3u00afu00c2u00bfu00c2u00ad", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2u00a2", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2 ", "&#39;" | replace: "&#233;", "e" | replace: "u00c3u00a9", "e" | replace: "u00c3 ", "a" | replace: "u00c3u00b3", "o" | replace: "u00c3u00aa", "e" | replace: "u00c3u0192u00cbu0153", "O" | replace: "&#8482;", "" | replace: "&#174;", "" }}]]></g:description>
+   {% endif %}
+   <g:link>{{shop.secure_url}}{{product.url}}</g:link>
+   {% if ff_crop contains 'on' %}
+   <g:image_link>https:{{product.featured_image | product_img_url: '600x600', crop: 'center'}}</g:image_link>
+   {% else %}
+   <g:image_link>https:{{product.featured_image | product_img_url: 'grande'}}</g:image_link>
+   {% endif %}
+  
+   <g:brand>{{product.vendor | escape }}</g:brand>
+   <g:condition>new</g:condition>
+   <g:item_group_id>{{product.id}}</g:item_group_id>
+   
+   {%  if product.available %}
+   <g:availability>in stock</g:availability>
+   {% else %}
+   <g:availability>out of stock</g:availability>
+   {% endif %}
+   
+   {% if product.metafields.google.google_product_type %}
+   <g:google_product_category>{{ product.metafields.google.google_product_type | replace: '&', '&amp;' }}</g:google_product_category>
+   {% else %}
+   	{% if ff_googlecategory %}
+   	<g:google_product_category>{{ ff_googlecategory | replace: '&', '&amp;' }}</g:google_product_category>
+   {% endif %}
+   {% endif %}
+
+   {% assign ff_tag = product.type %}
+    
+   <g:product_type>{{ff_tag | replace: '&', '&amp;'}}</g:product_type>
+   <g:price>{{product.price | money_without_currency}}{{shop.currency}}</g:price>
+    
+       
+    
+     
+  </item>
+  {% endfor %}
+
+  {% else %}
+
+  <item>
+{% if ff_shopifypx contains 'on' %}
+<g:id>{{product.id}}</g:id>
+{% else %}
+   <g:id>shopify_{{product.id}}</g:id>
+{% endif %}
+   {% if ff_lowercase contains 'on' %}
+   <g:title><![CDATA[{{ product.title | strip_html | downcase | capitalize | strip_newlines | escape | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "u00c3u00a9", "e" | replace: '&quot;', '' | replace: "u00c3 ", "a" }}]]></g:title>
+   <g:description><![CDATA[{{ product.description | strip_html | downcase | capitalize | strip_newlines | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "..", ". " | replace: "  ", " " | replace: "u00e2u20acu02dc", "&#39;" | replace: "u00e2u20acu2122", "&#39;" | replace: "&#8216;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00e2u201eu00a2", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00c5u201c", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00cbu0153", "&#39;"  | replace: "u00c3u201au00c2u00b4", "&#39;" | replace: "u00e2u20acu0153", "&#34;" | replace: "u00e2u20ac ", "&#34;" | replace: "&#8211;", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20acu0153", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20ac ", "-" | replace: "u00e2u20acu201c", "&mdash;" | replace: "u00e2u20acu201d", "&mdash;" | replace: "%", "&#37;" | replace: "u00c3u201au00c2u00a9", "&copy;" | replace: "u00c3u201au00c2u00ae", "&reg;" | replace: "u00c3u00a2u00e2u20acu017eu00c2u00a2", "&trade;" | replace: "u00c3u201au00c2u00a3", "&pound;" | replace: "u00c3u00afu00c2u00bfu00c2u00ad", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2u00a2", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2 ", "&#39;" | replace: "&#233;", "e" | replace: "u00c3u00a9", "e" | replace: "u00c3 ", "a" | replace: "u00c3u00b3", "o" | replace: "u00c3u00aa", "e" | replace: "u00c3u0192u00cbu0153", "O" | replace: "&#8482;", "" | replace: "&#174;", "" }}]]></g:description>
+   {% else %}
+   <g:title><![CDATA[{{ product.title | strip_html | strip_newlines | escape | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "u00c3u00a9", "e" | replace: '&quot;', '' | replace: "u00c3 ", "a" }}]]></g:title>
+   <g:description><![CDATA[{{ product.description | strip_html | strip_newlines | replace: '&amp;', 'and' | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "..", ". " | replace: "  ", " " | replace: "u00e2u20acu02dc", "&#39;" | replace: "u00e2u20acu2122", "&#39;" | replace: "&#8216;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00e2u201eu00a2", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00c5u201c", "&#39;" | replace: "u00c3u00a2u00e2u201au00acu00cbu0153", "&#39;"  | replace: "u00c3u201au00c2u00b4", "&#39;" | replace: "u00e2u20acu0153", "&#34;" | replace: "u00e2u20ac ", "&#34;" | replace: "&#8211;", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20acu0153", "-" | replace: "u00c3u00a2u00e2u201au00acu00e2u20ac ", "-" | replace: "u00e2u20acu201c", "&mdash;" | replace: "u00e2u20acu201d", "&mdash;" | replace: "%", "&#37;" | replace: "u00c3u201au00c2u00a9", "&copy;" | replace: "u00c3u201au00c2u00ae", "&reg;" | replace: "u00c3u00a2u00e2u20acu017eu00c2u00a2", "&trade;" | replace: "u00c3u201au00c2u00a3", "&pound;" | replace: "u00c3u00afu00c2u00bfu00c2u00ad", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2u00a2", "&#42;" | replace: "u00c3u00a2u00e2u201au00acu00c2 ", "&#39;" | replace: "&#233;", "e" | replace: "u00c3u00a9", "e" | replace: "u00c3 ", "a" | replace: "u00c3u00b3", "o" | replace: "u00c3u00aa", "e" | replace: "u00c3u0192u00cbu0153", "O" | replace: "&#8482;", "" | replace: "&#174;", "" }}]]></g:description>
+   {% endif %}
+   <g:link>{{shop.secure_url}}{{product.url}}</g:link>
+    
+   {% if ff_crop contains 'on' %}
+   <g:image_link>https:{{product.featured_image | product_img_url: '600x600', crop: 'center'}}</g:image_link>
+   {% else %}
+   <g:image_link>https:{{product.featured_image | product_img_url: 'grande'}}</g:image_link>
+   {% endif %}
+    
+  
+   <g:brand>{{product.vendor | escape }}</g:brand>
+   <g:condition>new</g:condition>
+   <g:item_group_id>{{product.id}}</g:item_group_id>
+   
+   {%  if product.available %}
+   <g:availability>in stock</g:availability>
+   {% else %}
+   <g:availability>out of stock</g:availability>
+   {% endif %}
+   
+   {% if product.metafields.google.google_product_type %}
+   <g:google_product_category>{{ product.metafields.google.google_product_type | replace: '&', '&amp;' }}</g:google_product_category>
+   {% else %}
+   	{% if ff_googlecategory %}
+   	<g:google_product_category>{{ ff_googlecategory | replace: '&', '&amp;' }}</g:google_product_category>
+   {% endif %}
+   {% endif %}
+       
+    
+   {% assign ff_tag = product.type %}
+
+    
+   {% if ff_fbcustom contains 'on' %}
+    
+   {% if product.metafields.facebook.custom_label_0 != null %}
+    <g:custom_label_0>{{ product.metafields.facebook.custom_label_0 }}</g:custom_label_0>
+   {% else %}
+    <g:custom_label_0>{{ ff_label_0 }}</g:custom_label_0>
+   {% endif %}
+   {% if product.metafields.facebook.custom_label_1 != null %}
+    <g:custom_label_1>{{ product.metafields.facebook.custom_label_1 }}</g:custom_label_1>
+   {% else %}
+    <g:custom_label_1>{{ ff_label_1 }}</g:custom_label_1>
+   {% endif %}
+   {% if product.metafields.facebook.custom_label_2 != null %}
+    <g:custom_label_2>{{ product.metafields.facebook.custom_label_2 }}</g:custom_label_2>
+    {% else %}
+    <g:custom_label_2>{{ ff_label_2 }}</g:custom_label_2>
+   {% endif %}
+   {% if product.metafields.facebook.custom_label_3 != null %}
+    <g:custom_label_3>{{ product.metafields.facebook.custom_label_3 }}</g:custom_label_3>
+    {% else %}
+    <g:custom_label_3>{{ ff_label_3 }}</g:custom_label_3>
+   {% endif %}
+   {% if product.metafields.facebook.custom_label_4 != null %}
+    <g:custom_label_4>{{ product.metafields.facebook.custom_label_4 }}</g:custom_label_4>
+    {% else %}
+    <g:custom_label_4>{{ ff_label_4 }}</g:custom_label_4>
+   {% endif %}
+    
+   {% endif %}
+ 
+   <g:product_type>{{ff_tag | replace: '&', '&amp;'}}</g:product_type>
+   <g:price>{{product.price | money_without_currency}}{{shop.currency}}</g:price>
+        
+  </item>
+  
+  {% endif %}
+
+  
+ {% endfor %}{% endpaginate %}
+</channel>
+</rss>

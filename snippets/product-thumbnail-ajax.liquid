@@ -1,0 +1,36 @@
+{% assign pro_index ='' %}
+{% for op in product.options %}
+  {% assign op_handle = op | downcase %}
+  {% if op_handle contains 'color' or op_handle contains 'colour' %}
+    {% assign pro_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+{% assign variant_url = '' %}
+{% assign variant_image = '' %}
+
+{% if pro_index != '' %}
+  {% assign pro_values = '' %}
+  {% assign pro_numvalues = '' %}
+  {% assign pro_option_index = pro_index %}
+  {% for product_vari in product.variants %}
+    {% assign pro_value = product_vari.options[pro_index] %}
+    {% assign pro_numvalue = product_vari.options[pro_option_index] %}
+    {% unless pro_values contains pro_value %} 
+      {% assign pro_values = pro_values | join: ',' %}
+      {% assign pro_values = pro_values | append: ',' | append: pro_value %}
+      {% assign pro_values = pro_values | split: ',' %}
+      {% assign pro_numvalues = pro_numvalues | join: ',' %}
+      {% assign pro_numvalues = pro_numvalues | append: ',' | append: pro_numvalues %}
+      {% assign pro_numvalues = pro_numvalues | split: ',' %}
+      {% if product_vari.title contains colorTag %}
+        {% assign variant_url = product_vari.url %}
+        {% assign variant_image = product_vari.image.src %}
+        {% include 'product-thumbnail' %}
+        {% break %}
+      {% endif %}
+    {% endunless %}
+  {% endfor %}
+{% else %}
+  {% include 'product-thumbnail' %}
+{% endif %}

@@ -1,0 +1,50 @@
+<div class="accordion-div">
+    {{ product.description | split: '<!-- split -->' | first }}
+
+  <!-- <ul class="accordion">
+      <li class="accordion-item is-active">
+        <p class="accordion-thumb">Lorem ipsum</p>
+        <p class="accordion-panel">
+          Lorem ipsum dolor sit amet, consectetur adipisicing
+          elit. Placeat, quibusdam! Voluptate nobis, beatae
+          tempora praesentium, illum quis illo, maiores quod
+          similique placeat, saepe mollitia dolor officiis
+          aspernatur deleniti debitis commodi!
+        </p>
+      </li>
+    </ul> -->
+</div>
+
+<script>
+    var tabs = {};
+    $(".accordion-div .tabs li a").each(function(n, e) {
+      tabs[n] = $(this).html();
+      console.log(tabs[n]);
+    });
+    
+    $(".accordion-div .tabs").each(function() {
+      $(this).remove();
+    });
+    var tabsContent = $(".accordion-div .tabs-content");
+    tabsContent.removeClass("tabs-content");
+    tabsContent.addClass("accordion");
+    console.log("remove ok");
+    
+    $(".accordion-div .accordion li").each(function(n, e) {
+      var tabContents = $(this).html();
+
+      console.log(tabContents);
+      $(this).empty();
+      $(this).addClass("accordion-item");
+      // $(this).removeClass("active");
+      
+      $(this).append("<p class='accordion-thumb'>"+tabs[n]+"</p>");
+      var p = $("<p class='accordion-panel'></p>");
+      $(this).append(p);
+      p.html(tabContents);
+    });
+
+    jQuery(document).ready(function() {
+
+    });
+</script>

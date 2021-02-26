@@ -1,0 +1,37 @@
+<script>
+    // Bootstrap for Simple Preorder app
+    var SimplePreorderBootstrap = {
+        "page": {{ template | json }},
+        "product": {
+            "id": {{ product.id | json }},
+            "title": {{ product.title | json }},
+            "variants": [
+                {% for variant in product.variants %}
+                    {
+                        "id": {{variant.id}},
+                        "inventory_quantity": '{{variant.inventory_quantity}}',
+                        "inventory_management": '{{variant.inventory_management}}',
+                        "inventory_policy": '{{variant.inventory_policy}}'
+                    },
+                {% endfor %}
+            ]
+        },
+        "cart": {
+            "items": [
+                {% for item in cart.items %}
+                    {
+                        "variant_id": {{item.variant.id}},
+                        "product_id": {{item.product.id}},
+                        "quantity": {{item.quantity}},
+                        "inventory_quantity": '{{item.variant.inventory_quantity}}',
+                        "inventory_management": '{{item.variant.inventory_management}}',
+                        "inventory_policy": '{{item.variant.inventory_policy}}',
+                        "properties": {{ item.properties | json }}
+                    },
+                {% endfor %}
+            ]
+        }
+    };
+</script>
+
+<script src="https://preorder.kad.systems/scripts/alpha-prime-apparel.myshopify.com.js"></script>

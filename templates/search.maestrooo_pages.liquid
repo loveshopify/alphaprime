@@ -1,0 +1,64 @@
+{%- comment -%}
+This template has been created automatically by one of the Maestrooo's application (for instance: SuperFields...).
+
+We use those templates to provide additional features to our apps, and you SHOULD NOT delete this template if you
+are still using our apps. Otherwise, the apps may not work as expected.
+{%- endcomment -%}
+
+{%- layout none -%}
+
+{%- capture jsonp_callback -%}callback_maestrooo_pages_{{ search.terms | md5 }}{%- endcapture -%}
+
+{%- if search.terms contains 'handle:' or search.terms contains 'id:' -%}
+  {%- if search.terms contains 'handle:' -%}
+    {%- assign page_handle = search.terms | split: 'handle:' | last -%}
+    {%- assign page = pages[page_handle] -%}
+  {%- else -%}
+    {%- assign page = search.results.first -%}
+  {%- endif -%}
+  
+  {%- if page.handle != blank -%}
+    {{ jsonp_callback }}({
+      "id": {{ page.id }},
+      "object": "page",
+      "title": {{ page.title | json }},
+      "url": {{ shop.secure_url | append: page.url | json }},
+      "handle": {{ page.handle | json }},
+      "author": {{ page.author | json }},
+      "created_at": {{ page.created_at | date: '%FT%T%:z' | json }},
+      "published_at": {{ page.published_at | date: '%FT%T%:z' | json }},
+      "template_suffix": {{ page.template_suffix | json }}
+    })
+  {%- else -%}
+    {{ jsonp_callback }}({})
+  {%- endif -%}
+{%- else -%}
+  {%- paginate search.results by 50 -%}
+    {%- capture pages -%}
+      [
+        {%- for page in search.results -%}
+          {
+            "id": {{ page.id }},
+            "object": "page",
+            "title": {{ page.title | json }},
+            "url": {{ shop.secure_url | append: page.url | json }},
+            "handle": {{ page.handle | json }},
+            "author": {{ page.author | json }},
+            "created_at": {{ page.created_at | date: '%FT%T%:z' | json }},
+            "published_at": {{ page.published_at | date: '%FT%T%:z' | json }},
+            "template_suffix": {{ page.template_suffix | json }}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    {%- endcapture -%}
+
+    {{ jsonp_callback }}({
+      "object": "list",
+      "data": {{ pages }},
+      "meta": {
+        "total_count": {{ paginate.items }},
+        "has_more": {% if paginate.next %}true{% else %}false{% endif %}
+      }
+    })
+  {%- endpaginate -%}
+{%- endif -%}

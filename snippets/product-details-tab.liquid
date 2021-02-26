@@ -1,0 +1,42 @@
+{% assign collection_handles = product.collections | map: 'handle' %}
+
+<div class="thumbnail-overlay">
+  <a href="{% if variant_url and variant_url != '' %}{{ variant_url }}{% else %}{{ product.url | within: collection }}{% endif %}" itemprop="url" class="hidden-product-link">{{ product.title }}</a>
+  <div class="info">
+    {% if settings.thumbnail_hover_enabled and settings.quick_shop_enabled %}
+      {% include "product-info-tab" %}
+      {% include 'quick-shop-button' %}
+    {% elsif settings.thumbnail_hover_enabled %}
+      {% include "product-info-tab" %}
+    {% elsif settings.quick_shop_enabled %}
+      {% include 'quick-shop-button' %}
+    {% endif %}
+  </div>
+  
+  {% unless collection_handles contains 'coming-soon' or hide_sizes %}
+    {% assign pro_index_size = '' %}
+    
+    {% for op in product.options %}
+      {% assign op_handle = op | downcase %}
+      {% if op_handle contains 'size' or op_handle contains 'sizes' %}
+        {% assign pro_index_size = forloop.index0 %}
+      {% endif %}
+    {% endfor %}
+    
+    {% if pro_index_size != '' %}
+    {% endif %}
+  {% endunless %}
+</div>
+<div class="banner_holder">
+  {% if product.available %}
+    {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
+      <div class="sale_banner thumbnail_banner">{{ 'collections.general.sale' | t }}</div>
+    {% endif %}
+  {% endif %}
+  {% if new_release_banner %}
+    <div class="new_banner thumbnail_banner">{{ 'collections.general.new' | t }}</div>
+  {% endif %}
+  {% if pre_order_banner %}
+    <div class="preorder_banner thumbnail_banner">{{ 'collections.general.pre_order' | t }}</div>
+  {% endif %}
+</div>

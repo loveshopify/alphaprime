@@ -1,0 +1,428 @@
+{% assign index = '' %}
+{% for option in product.options %}
+   {% assign downcased_option = option | downcase %}
+    {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+      {% assign index = forloop.index0 %}
+   {% endif %}
+{% endfor %}
+
+{% assign selected_color_variant = product.selected_or_first_available_variant.options[index] | downcase %}
+
+  {% capture list_new %}
+    {% for image in product.images %}
+        {{ image.id }}`~`{{ image.alt }}`~`{{ image | product_img_url: '100x' }}`~`{{ image | product_img_url: '200x' }}`~`{{ image | product_img_url: '400x' }}`~`{{ image | product_img_url: '600x' }}`~`{{ image | product_img_url: '800x' }}`~`{{ image | product_img_url: '1200x' }}`~`{{ image | product_img_url: '2000x' }}`~`{{-image.width-}}px`~`{{-image.height-}}px{% if forloop.last == false %}^{% endif %}
+       {% endfor %} 
+  {% endcapture %}
+  {% assign image_list_new = list_new | split: "^" %}
+
+
+
+
+
+{% if index != '' %}
+  {% assign flag = false %}
+  {% for image in product.images %}
+    {% assign image_text = image.alt | downcase %}
+    {% if image_text != '' %}
+      {% assign flag = true %}
+    {% endif %}
+  {% endfor %}
+    
+  {% assign values = '' %}
+  {% assign numvalues = '' %}
+  {% assign option_index = index %}
+  {% for product_vari in product.variants %}
+    {% assign value = product_vari.options[index] %}
+    {% assign numvalue = product_vari.options[option_index] %}
+    {% unless values contains value %}  
+      {% assign values = values | join: ',' %}
+      {% assign values = values | append: ',' | append: value %}
+      {% assign values = values | split: ',' %}
+      {% assign numvalues = numvalues | join: ',' %}
+      {% assign numvalues = numvalues | append: ',' | append: numvalues %}
+      {% assign numvalues = numvalues | split: ',' %}
+    {% endunless %}
+  {% endfor %}
+
+  {% for value in values %}
+    {% assign valueName = value | downcase %}
+    {% assign test = forloop.index %}
+    <div data-value="{{value | downcase}}" style="display: none;" class="gallery-wrap js-product-page-gallery clearfix
+    gallery-arrows--{{section.settings.gallery_arrows}}
+    {% if section.settings.product_thumbs %} {{ section.settings.thumbnail_position }} {% endif %}
+    slideshow_animation--{{ section.settings.slideshow_animation }}
+    ">
+      {% assign flag = false %}
+      {% for img_new in product.images %}
+      {% assign alt = img_new.alt | downcase %}
+      {% if alt contains 'size' %}
+      {% assign flag = true %}
+      {% endif %}
+      {% endfor %}
+      {% if flag %}
+        {% assign size_list = '' %}
+        {% for size_img in product.images %}
+          {% assign size_alt = size_img.alt | downcase %}
+          {% if size_alt contains ',' %}
+            {% assign model_size_alt = size_alt | split:',' %}
+            {% assign size_name = model_size_alt[1] %}
+            {% unless size_list contains size_name %}
+              <div class="model model-{{size_name}}" style="display:none;">
+                {% assign count1 = 0 %}
+                {% assign count2 = 0 %}
+                <div class="row">
+                  <div class="three-fourths column main_img_wrap" style="float: right;">
+                    <div class="product_gallery product-{{ product.id }}-gallery
+                                {% if product.images.size > 1 %} multi-image {% endif %}
+                                {% if product.images.size <= 1 %} single-image {% endif %}
+                                {% if settings.slideshow_button_style != true %}light-button{% endif %}" data-zoom="{{ section.settings.activate_zoom }}" data-autoplay="{{ section.settings.activate_autoplay }}">
+                                {% assign color_name = value | downcase %}
+                                {% for image_item in image_list_new %}
+                                {% assign image = image_item | split: "`~`" %}
+                                {% capture image_id %}{{ image[0] | strip }}{% endcapture %}
+                                {% capture image_alt %}{{ image[1] | strip }}{% endcapture %}
+                                {% capture image_100x %}{{ image[2] }}{% endcapture %}
+                                {% capture image_200x %}{{ image[3] }}{% endcapture %}
+                                {% capture image_400x %}{{ image[4] }}{% endcapture %}
+                                {% capture image_600x %}{{ image[5] }}{% endcapture %}
+                                {% capture image_800x %}{{ image[6] }}{% endcapture %}
+                                {% capture image_1200x %}{{ image[7] }}{% endcapture %}
+                                {% capture image_2000x %}{{ image[8] }}{% endcapture %}
+                                {% capture original_image_width %}{{- image[9] -}}{% endcapture %}
+                                {% capture original_image_height %}{{- image[10] -}}{% endcapture %}
+                                {% assign image_alttext = image_alt | downcase %}
+                                  {% if image_alttext contains ',' %}
+                                    {% assign model_image_alt = image_alttext | split:',' %}
+                                    {% assign image_alttext = model_image_alt[0] %}
+                                    {% assign model_image_size = model_image_alt[1] %}
+                                    {% assign image_alt = image_alttext %}
+                                  {% else %}
+                                    {% assign model_image_size = 'null' %}
+                                  {% endif %}
+                                  {% if color_name == image_alttext %}
+                                    {% if model_image_size == size_name %}
+                                      <div class="gallery-cell" data-thumb="{{ image_large }}" data-title="{% if image_alt contains 'youtube' or image_alt contains 'vimeo' %}{{ product.title }}{% else %}{{ image_alt | escape }}{% endif %}" data-image-height="{{ original_image_height | strip }}" data-image-width="{{ original_image_width | strip }}">
+                                          {% if template != 'index' and section.settings.enable_product_lightbox %}
+                                          <a href="{{ image_800x }}" rel="{{size_name}}_{{value | handle}}" data-lightbox="gallery" data-lightbox-zoom="{{ section.settings.activate_zoom }}" >
+                                            {% endif %}
+                                            {% if image_width == 'full' %}
+                                            <div class="image__container" style="max-width: {{original_image_width}}">
+                                              <img  src="{{ image_1200x }}"
+                                                  alt="{{ image_alt | escape }}"
+                                                  class=" lazyload {{ settings.image_loading_style }}"
+                                                  data-index="{{count1}}"
+                                                  data-image-id="{{ image_id }}"
+                                                  />
+                                            </div>
+                                            {% else %}
+                                            <div class="image__container" style="max-width: {{original_image_width}}">
+                                              <img  src="{{ image_100x }}"
+                                                  alt="{{ image_alt | escape }}"
+                                                  class=" lazyload {{ settings.image_loading_style }}"
+                                                  data-index="{{count1}}"
+                                                  data-image-id="{{ image_id }}"
+                                                  data-sizes="auto"
+                                                  data-src="{{ image_800x }}"
+                                                  />
+                                            </div>
+                                            {% endif %}
+                                            {% if template != 'index' and section.settings.enable_product_lightbox %}
+                                          </a>
+                                          {% endif %}
+                                      </div>
+                                      {% assign count1 = count1 | plus:1 %}
+                                    {% endif %} 
+                                {% endif %} 
+                                {% endfor %}
+                    </div>
+                  </div>
+                  <div class="one-fourth column hidden-small thumbnail_wrap" data-images="{{product.images.size}}">
+                    {% if section.settings.product_thumbs and product.images.size > 1 and image_width != 'full' %}
+                      <div class="product_gallery_nav product-{{ product.id }}-gallery-nav">
+                        {% assign color_name = value | downcase %}
+                        {% for image_item in image_list_new %}
+                        {% assign image = image_item | split: "`~`" %}
+                        {% capture image_id %}{{ image[0] | strip }}{% endcapture %}
+                        {% capture image_alt %}{{ image[1] | strip }}{% endcapture %}
+                        {% capture image_100x %}{{ image[2] }}{% endcapture %}
+                        {% capture image_200x %}{{ image[3] }}{% endcapture %}
+                        {% capture image_400x %}{{ image[4] }}{% endcapture %}
+                        {% capture image_600x %}{{ image[5] }}{% endcapture %}
+                        {% capture image_800x %}{{ image[6] }}{% endcapture %}
+                        {% capture image_1200x %}{{ image[7] }}{% endcapture %}
+                        {% capture image_2000x %}{{ image[8] }}{% endcapture %}
+                        {% assign image_alttext = image_alt | downcase %}
+                        {% if image_alttext contains ',' %}
+                        {% assign model_image_alt = image_alttext | split:',' %}
+                        {% assign image_alttext = model_image_alt[0] %}
+                        {% assign model_image_size = model_image_alt[1] %}
+                        {% assign image_alt = image_alttext %}
+                        {% else %}
+                        {% assign model_image_size = 'null' %}
+                        {% endif %}
+                        {% if color_name == image_alttext %}
+                        {% if model_image_size == size_name %}
+                        <div class="gallery-cell" data-title="{{ image_alt | escape }}">
+                          <img  src="{{ image_400x }}"
+                              alt="{{ image_alt | escape }}"
+                              data-index="{{count2}}"
+                              data-image-id="{{ image_id }}"
+                              data-featured-image="{{featured_image.id}}"
+                              />
+                        </div>
+                        {% assign count2 = count2 | plus:1 %}
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              {% assign size_list = size_list | append: '_' | append: size_name %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endif %}
+
+{% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+{% capture list %}
+  {% if index != '' %}
+    {% for image in product.images %}
+      {% assign image_alt = image.alt | downcase %}
+      {% if image_alt == selected_color_variant %}
+        {% comment %}Loop through images only once{% endcomment %}
+        {{ image.id }}`~`{{ image.alt }}`~`{{ image | product_img_url: '100x' }}`~`{{ image | product_img_url: '200x' }}`~`{{ image | product_img_url: '400x' }}`~`{{ image | product_img_url: '600x' }}`~`{{ image | product_img_url: '800x' }}`~`{{ image | product_img_url: '1200x' }}`~`{{ image | product_img_url: '2000x' }}`~`{{-image.width-}}px`~`{{-image.height-}}px{% if forloop.last == false %}^{% endif %}
+      {% endif %}   
+    {% endfor %}
+  {% else %}
+    {% for image in product.images %}
+      {% comment %}Loop through images only once{% endcomment %}
+      {{ image.id }}`~`{{ image.alt }}`~`{{ image | product_img_url: '100x' }}`~`{{ image | product_img_url: '200x' }}`~`{{ image | product_img_url: '400x' }}`~`{{ image | product_img_url: '600x' }}`~`{{ image | product_img_url: '800x' }}`~`{{ image | product_img_url: '1200x' }}`~`{{ image | product_img_url: '2000x' }}`~`{{-image.width-}}px`~`{{-image.height-}}px{% if forloop.last == false %}^{% endif %}
+      {% endfor %}
+  {% endif %}
+{% endcapture %}
+{% assign image_list = list | split: "^" %}
+
+<div class="gallery-wrap js-product-page-gallery clearfix
+            gallery-arrows--{{section.settings.gallery_arrows}}
+            {% if section.settings.product_thumbs %} {{ section.settings.thumbnail_position }} {% endif %}
+            slideshow_animation--{{ section.settings.slideshow_animation }}
+            ">
+              {% assign flag = false %}
+              {% for img_new in product.images %}
+              {% assign alt = img_new.alt | downcase %}
+              {% if alt contains 'size' %}
+              {% assign flag = true %}
+              {% endif %}
+              {% endfor %}
+              {% if flag %}
+                {% assign size_list = '' %}
+                {% for size_img in product.images %}
+                {% assign size_alt = size_img.alt | downcase %}
+                {% assign size_name = size_alt %}
+                {% if size_name contains 'size' %}
+                {% unless size_list contains size_name %}
+                <div class="model model-{{size_name}}" style="display:none;">
+                  <div class="product_gallery product-{{ product.id }}-gallery
+                              {% if product.images.size > 1 %} multi-image {% endif %}
+                              {% if product.images.size <= 1 %} single-image {% endif %}
+                              {% if settings.slideshow_button_style != true %}light-button{% endif %}
+                              "
+                       data-zoom="{{ section.settings.activate_zoom }}"
+                       data-autoplay="{{ section.settings.activate_autoplay }}">
+
+                    {% for image_item in image_list %}
+
+                    {% assign image = image_item | split: "`~`" %}
+                    {% capture image_id %}{{ image[0] | strip }}{% endcapture %}
+                    {% capture image_alt %}{{ image[1] | strip }}{% endcapture %}
+                    {% capture image_100x %}{{ image[2] }}{% endcapture %}
+                    {% capture image_200x %}{{ image[3] }}{% endcapture %}
+                    {% capture image_400x %}{{ image[4] }}{% endcapture %}
+                    {% capture image_600x %}{{ image[5] }}{% endcapture %}
+                    {% capture image_800x %}{{ image[6] }}{% endcapture %}
+                    {% capture image_1200x %}{{ image[7] }}{% endcapture %}
+                    {% capture image_2000x %}{{ image[8] }}{% endcapture %}
+                    {% capture original_image_width %}{{- image[9] -}}{% endcapture %}
+                    {% capture original_image_height %}{{- image[10] -}}{% endcapture %}
+                    {% assign image_alttext = image_alt | downcase %}
+                    {% assign image_alt = image_alttext %}
+
+                    {% if image_alt == size_name %}
+                    <div class="gallery-cell" data-thumb="{{ image_large }}" data-title="{% if image_alt contains 'youtube' or image_alt contains 'vimeo' %}{{ product.title }}{% else %}{{ image_alt | escape }}{% endif %}" data-image-height="{{ original_image_height | strip }}" data-image-width="{{ original_image_width | strip }}">
+
+                      {% if template != 'index' and section.settings.enable_product_lightbox %}
+                      <a href="{{ image_800x }}" rel="gallery_{{size_name}}" data-lightbox="gallery" data-lightbox-zoom="{{ section.settings.activate_zoom }}" >
+                        {% endif %}
+                        {% if image_width == 'full' %}
+                        <div class="image__container" style="max-width: {{original_image_width}}">
+                          <img  src="{{ image_1200x }}"
+                               alt="{{ image_alt | escape }}"
+                               class=" lazyload {{ settings.image_loading_style }}"
+                               data-index="{{ forloop.index0 }}"
+                               data-image-id="{{ image_id }}"
+                               />
+                        </div>
+                        {% else %}
+                        <div class="image__container" style="max-width: {{original_image_width}}">
+                          <img  src="{{ image_100x }}"
+                               alt="{{ image_alt | escape }}"
+                               class=" lazyload {{ settings.image_loading_style }}"
+                               data-index="{{ forloop.index0 }}"
+                               data-image-id="{{ image_id }}"
+                               data-sizes="auto"
+                               data-src="{{ image_2000x }}"
+                               srcset=" {{ image_200x }} 200w,
+                                       {{ image_400x }} 400w,
+                                       {{ image_600x }} 600w,
+                                       {{ image_800x }} 800w,
+                                       {{ image_1200x }} 1200w,
+                                       {{ image_2000x }} 2000w"
+                               />
+                        </div>
+                        {% endif %}
+                        {% if template != 'index' and section.settings.enable_product_lightbox %}
+                      </a>
+                      {% endif %}
+
+                    </div>
+                    {% endif %}
+
+                    {% endfor %}
+                  </div>
+                  {% if section.settings.product_thumbs %}
+                  {% if product.images.size > 1 and image_width != 'full' %}
+                  <div class="product_gallery_nav product-{{ product.id }}-gallery-nav">
+
+                    {% for image_item in image_list %}
+                    {% assign image = image_item | split: "`~`" %}
+                    {% capture image_id %}{{ image[0] | strip }}{% endcapture %}
+                    {% capture image_alt %}{{ image[1] | strip }}{% endcapture %}
+                    {% capture image_100x %}{{ image[2] }}{% endcapture %}
+                    {% capture image_200x %}{{ image[3] }}{% endcapture %}
+                    {% capture image_400x %}{{ image[4] }}{% endcapture %}
+                    {% capture image_600x %}{{ image[5] }}{% endcapture %}
+                    {% capture image_800x %}{{ image[6] }}{% endcapture %}
+                    {% capture image_1200x %}{{ image[7] }}{% endcapture %}
+                    {% capture image_2000x %}{{ image[8] }}{% endcapture %}
+                    {% assign image_alttext = image_alt | downcase %}
+                    {% assign image_alt = image_alttext %}
+
+                    {% if image_alt == size_name %}
+                    <div class="gallery-cell" data-title="{{ image_alt | escape }}">
+                      <img  src="{{ image_400x }}"
+                           alt="{{ image_alt | escape }}"
+                           data-index="{{ forloop.index0 }}"
+                           data-image-id="{{ image_id }}"
+                           data-featured-image="{{featured_image.id}}"
+                           />
+                    </div>
+                    {% endif %}
+
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                  {% endif %}
+                </div>
+                {% assign size_list = size_list | append: '_' | append: size_name %}
+                {% endunless  %}
+                {% endif %}
+                {% endfor %}
+              {% endif %}
+</div>
+
+
+ {% assign flag = false %}
+ {% for img_new in product.images %}
+   {% assign alt = img_new.alt | downcase %}
+   {% if alt contains 'size' %}
+     {% assign flag = true %}
+     {% break %}
+   {% endif %}
+ {% endfor %}
+
+{% if flag %}
+  {% assign model_name = product.metafields.model.name %}
+  {% if model_name != null %}
+     {% assign modelName = model_name %}
+    {% else %}
+   {% assign modelName = 'Change Model' %}
+   {% endif %}
+  <div class="change-size mobile">
+    <span class="change-label-size"><label class="change-label-value">Wearing APA size 1</label> <a class="model-change"><b>{{modelName}}</b></a></span>
+    {% assign index_size = '' %}
+    {% for option in product.options %}
+      {% assign downcased_option = option | downcase %}
+      {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+        {% assign index_size = forloop.index0 %}
+      {% endif %}
+    {% endfor %}
+    {% if index_size != '' %}
+    <ul class="model-legend-nav js-model-legend-nav">
+      {% assign size_list = '' %}
+      {% for img_new in product.images %}
+        {% assign img_alt_new = img_new.alt | downcase %}
+        {% if img_alt_new contains ',' %}
+        {% assign model_image_alt = img_alt_new | split:',' %}
+        {% assign model_image_size = model_image_alt[1] %}
+        {% unless size_list contains model_image_size %}
+          <div class="model-legend-item">
+            {% assign size = model_image_size | replace: 'size', '' | strip | upcase %}
+            {% assign key = size | prepend: 'size_' %}
+            <div class="for_value hidden">
+              {% if product.metafields.model[key] != null %}
+                {{ product.metafields.model[key] }}
+              {% else %}
+                Wearing APA
+              {% endif %}
+              <b>Size {{ size }}</b>
+            </div>
+            <input class="model-legend-input" type="radio" id="{{ model_image_size }}_1" value="{{ model_image_size }}" name="model" data-model-filter="katie" data-index="1">
+            <label for="{{ model_image_size }}_1" class="model-legend-label">
+              <span>
+                {% if product.metafields.model[key] != null %}
+                  {{ product.metafields.model[key] }}
+                {% else %}
+                  Wearing APA
+                {% endif %}
+                Size {{ size }}
+              </span>
+            </label>
+          </div>
+          {% assign size_list = size_list | append: '_' | append: model_image_size %}
+        {% endunless  %}
+        {% endif %}
+      {% endfor %}
+      <div class="model-legend-nav-close">
+        <img src="{{ 'close.png' | asset_url }}" alt="Close icon">
+      </div>
+     </ul>
+    {% else %}
+     <ul class="model-legend-nav js-model-legend-nav">
+      {% assign size_list = '' %}
+      {% for img_new in product.images %}
+        {% assign img_alt_new = img_new.alt | downcase %}
+          {% if img_alt_new contains 'size' %}
+          {% unless size_list contains img_alt_new %}
+            <div class="model-legend-item">
+              
+              <input class="model-legend-input" type="radio" id="{{img_alt_new}}_" value="{{img_alt_new}}" name="model" data-model-filter="katie" data-index="1">
+              <label for="{{img_alt_new}}_" class="model-legend-label">
+                <span>Wearing APA {{img_alt_new | replace: 'size','Size ' }}</span>
+              </label>
+            </div>
+          {% assign size_list = size_list | append: '_' | append: img_alt_new %}
+          {% endunless %}
+       {% endif %}
+      {% endfor %}
+      <div class="model-legend-nav-close">
+        <img src="{{ 'close.png' | asset_url }}" alt="Close icon">
+      </div>
+     </ul>
+    {% endif %}
+  </div>
+{% endif %}

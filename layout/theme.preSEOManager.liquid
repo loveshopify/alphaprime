@@ -1,0 +1,439 @@
+{% capture content %}
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="{{ shop.locale }}"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="{{ shop.locale }}"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="{{ shop.locale }}"> <![endif]-->
+<!--[if IE 9 ]><html class="ie ie9" lang="{{ shop.locale }}"> <![endif]-->
+<!--[if (gte IE 10)|!(IE)]><!--><html lang="{{ shop.locale }}"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="cleartype" content="on">
+  <meta name="robots" content="index,follow">
+
+  <meta name="google-site-verification" content="yZEyA6ZGrx8CrdptHigLU1P_mxI1ntb6fPpCYyzTxtg" />
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags | escape }}.{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}.{% endif %}" />
+  {% endif %}
+
+  {% include 'social-meta-info' %}
+
+  <!-- Mobile Specific Metas -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.shop_bg_color }}">
+  
+  <!-- Custom Fonts -->
+  {% if settings.logo_font contains 'Google' or settings.headline_font contains 'Google' or settings.nav_font contains 'Google' or settings.slideshow_subtitle_font contains 'Google' or settings.slideshow_headline_font contains 'Google' or settings.regular_font contains 'Google' %}
+    <link href="//fonts.googleapis.com/css?family=.|{% if settings.logo_font contains 'Google' %}{{ settings.logo_font | replace: 'Google_', '' | replace: "'", "" }}:light,normal,bold|{% endif %}{% if settings.headline_font contains 'Google' %}{{ settings.headline_font | replace: 'Google_', '' | replace: "'", "" }}:light,normal,bold|{% endif %}{% if settings.nav_font contains 'Google' %}{{ settings.nav_font | replace: 'Google_', '' | replace: "'", "" }}:light,normal,bold|{% endif %}{% if settings.slideshow_headline_font contains 'Google' %}{{ settings.slideshow_headline_font | replace: 'Google_', '' | replace: "'", "" }}:light,normal,bold|{% endif %}{% if settings.slideshow_subtitle_font contains 'Google' %}{{ settings.slideshow_subtitle_font | replace: 'Google_', '' | replace: "'", "" }}:light,normal,bold|{% endif %}{% if settings.regular_font contains 'Google' %}{{ settings.regular_font | replace: 'Google_', '' | replace: "'", "" }}:light,normal,bold{% endif %}" rel="stylesheet" type="text/css" />
+  {% endif %}
+
+  {% comment %} Stylesheets for Turbo 3.0.4 {% endcomment %}
+  {{ 'styles.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'styles.temp.scss.css' | asset_url | stylesheet_tag }}
+  
+  {% comment %} Assets {% endcomment %}
+  {{ 'jquery.min.js' | asset_url | script_tag }}
+  {{ 'lazysizes.min.js' | asset_url | script_tag }}
+  {{ 'slick.css' | asset_url | stylesheet_tag }}
+  {{ 'slick-theme.css' | asset_url | stylesheet_tag }}
+  {{ 'slick.min.js' | asset_url | script_tag }}
+
+  {% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %}{% endif %}
+  <title>{% if template contains "index" %}{{ page_title }}{% else %}{{ page_title }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}{% endif %}{% unless page_title contains shop.name %} - {{ shop.name }}{% endunless %}{% endif %}</title>
+  
+  {% if collection.previous_product %}<link rel="prev" href="{{ collection.previous_product }}">{% endif %}
+  {% if collection.next_product %}<link rel="next" href="{{ collection.next_product }}">{% endif %}
+
+  {% if settings.favicon != nil %}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ settings.favicon | img_url: '32x32' }}">
+  {% else %}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.png' | asset_url }}">
+  {% endif %}
+  <link rel="canonical" href="{{ canonical_url }}" />
+
+  {% if template contains 'customer' %}
+    {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+    {{ "customer_area.js" | shopify_asset_url | script_tag }}
+  {% endif %}
+  
+  {{ content_for_header }}
+  
+  {% include "loyaltylion" %}
+  
+  <script type="text/javascript">(function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/mtaaqGtLZpinLiNkIw4sE4sejwNhY15j91ug8DeO/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script>
+
+  {% if template contains "index" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "collection" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "blog" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "article" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "contact" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "product" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "gallery" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "banner" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "details" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "faq" %}
+    {% assign feature_image = true %}
+  {% elsif template contains "search" %}
+    {% assign feature_image = true %}
+  {% else %}
+    {% assign feature_image = false %}
+  {% endif %}
+
+  <noscript>
+    <style>
+      .product_section .product_form {
+        opacity: 1;
+      }
+
+      .multi_select,
+      form .select {
+        display: block !important;
+      }
+    </style>
+  </noscript>
+
+  {% include 'shogun-head' %}
+</head>
+<body class="{{ template | replace: '.', '-' | handle }}" data-money-format="{{ shop.money_format }}" data-shop-url="{{ shop.url }}">
+
+  {% if handle == 'test-mobile-menu' %}
+    {% include 'nav-mobile-menu' %}
+  {% else %}
+    {% include 'nav-drawer' %}
+    <div id="filterDrawer" class="drawer"></div>
+  {% endif %}
+
+  <div class="cart_content animated fadeIn drawer drawer--right">
+      <div class="js-empty-cart__message {% if cart.item_count > 0 %}hidden{% endif %}">
+        <p class="empty_cart">{{ 'layout.general.empty_cart' | t }}</p>
+      </div>
+      <form action="/checkout" method="post" data-money-format="{{ shop.money_format }}" data-shop-currency="{{ shop.currency }}" data-shop-name="{{ shop.name | escape }}" class="js-cart_content__form {% if cart.item_count == 0 %}hidden{% endif %}">
+        <a class="cart_content__continue-shopping secondary_button">
+          {{ 'cart.general.continue_shopping_link_html' | t }}
+        </a>
+        <ul class="cart_items js-cart_items clearfix">
+          {% assign total_saving = 0 %}
+          {% for item in cart.items %}
+          {% if item.variant.compare_at_price > item.variant.price %}
+          {% assign saving = item.variant.compare_at_price | minus: item.variant.price | times: item.quantity %}
+          {% assign total_saving = saving | plus: total_saving %}
+          {% endif %}
+
+          <li class="cart_item clearfix">
+            <a href="{{ item.url }}">
+              {% if item.image %}
+              <div class="cart_image">
+                <img src="{{ item | img_url: '320x' }}" alt="{{ item.title | escape }}" />
+              </div>
+              {% endif %}
+              <strong class="right price">
+                {% if item.price < item.variant.compare_at_price %}
+                <span class="money was_price">{{ item.variant.compare_at_price | money }}</span>
+                {% endif %}
+
+                <span class="money">{{ item.price | money }}</span>
+              </strong>
+              <div class="item_title">
+                {{ item.product.title }}
+                {% unless item.product.has_only_default_variant or item.variant.title contains "Title" %}
+                -
+                {% for option in item.product.options %}
+                {{ item.variant.options[forloop.index0] }} {% unless forloop.last %}/{% endunless %}
+                {% endfor %}
+                {% endunless %}
+                {% if item.properties %}
+                {% for p in item.properties %}
+                {% if p.last != blank %}
+                <div class="line-item">
+                  {{ p.first }}: {{ p.last }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+              </div>
+            </a>
+            {% unless item.properties.Kit %}
+              <div class="left product-quantity-box">
+                <span class="ss-icon product-minus js-change-quantity" data-func="minus"><span class="icon-minus"></span></span>
+                <input type="number" min="0" size="2" class="quantity" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" data-line-id="{{ forloop.index }}" />
+                <span class="ss-icon product-plus js-change-quantity" data-func="plus"><span class="icon-plus"></span></span>
+              </div>
+            {% endunless %}
+            {% comment %} Customize Your Kit {% endcomment %}
+            {% if item.properties.Kit %}
+              <p>
+                <a href="{{ pages['customize-your-kit'].url }}#/edit/kit/{{ item.properties.Kit }}/step/{{ item.properties.Step }}">Edit</a>
+                &nbsp;&nbsp;
+                <a href="{{ pages['customize-your-kit'].url }}#/remove/kit/{{ item.properties.Kit }}/step/{{ item.properties.Step }}">Remove Kit</a>
+              </p>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        <hr />
+        <ul>
+          <li class="cart_subtotal js-cart_subtotal">
+            <span class="right">
+              <span class="money">{{ cart.total_price | money }}</span>
+            </span>
+            <span>{{ 'layout.general.subtotal' | t }}</span>
+          </li>
+          {% if settings.display_savings %}
+          <li class="cart_savings sale js-cart_savings">
+            {% if total_saving > 0 %}
+            <span class="right">
+              <span class="money">{{ total_saving | money }}</span>
+            </span>
+            <span>{{ 'layout.general.savings' | t }}</span>
+            {% endif %}
+          </li>
+          {% endif %}
+          <li>
+            {% if settings.display_special_instructions and settings.go_to_checkout %}
+            <textarea id="note" name="note" rows="2" placeholder="{{ 'layout.general.cart_note' | t }}" class="clearfix">{{ cart.note }}</textarea>
+            {% endif %}
+
+            {% if settings.display_tos_checkbox and settings.go_to_checkout %}
+            <p class="tos">
+              <input type="checkbox" class="tos_agree" id="sliding_agree" required />
+              <label class="tos_label">
+                {{ 'cart.general.agree_to_terms_html' | t }}
+              </label>
+              {% if settings.tos_page != blank %}
+              <a href="{{ pages[settings.tos_page].url }}" target="_blank" class="tos_icon">{{ 'cart.general.view_terms' | t }}</a>
+              {% endif %}
+            </p>
+            {% endif %}
+
+            {% if settings.cart_message != blank %}
+            <div class="cart_text">
+              {{ settings.cart_message }}
+            </div>
+            {% endif %}
+
+            <input type="submit" class="action_button" value="{% if settings.go_to_checkout %}{{ 'layout.general.checkout' | t }}{% else %}{{ 'layout.general.go_to_cart' | t }}{% endif %}" />
+          </li>
+          <li style="text-align:center;"><a class="continue_shopping">Continue Shopping</a></li>
+        </ul>
+      </form>
+      
+    </div>
+    
+  <div id="PageContainer" class="is-transitioning">
+    {% section 'header' %}
+
+    <div class="mega-menu-container">
+      {% if settings.mega_menu_1 %}
+        {% section 'mega-menu-1' %}
+      {% endif %}
+
+      {% if settings.mega_menu_2 %}
+        {% section 'mega-menu-2' %}
+      {% endif %}
+
+      {% if settings.mega_menu_3 %}
+        {% section 'mega-menu-3' %}
+      {% endif %}
+    </div>
+
+    {% unless feature_image %}
+      <div class="container main content">
+    {% endunless %}
+
+      {{ content_for_layout }}
+    </div>
+
+    {% unless template contains 'index' or settings.secondary_newsletter_banner == false %}
+      {% section 'newsletter' %}
+    {% endunless %}
+
+    {% section 'footer' %}
+
+    {% if settings.size_chart != blank %}
+      {% include 'popup-size-chart' %}
+    {% endif %}
+    {% if settings.newsletter_popup %}
+      {% include 'popup-newsletter' %}
+    {% endif %}
+    {% if settings.quick_shop_enabled %}
+      {% include 'popup-quick-shop' %}
+    {% endif %}
+    {% if settings.disqus_enabled %}
+      {% if template contains "blog" or template contains "article" or template contains "index" %}
+        <script id="dsq-count-scr" src="//{{ settings.disqus_shortname }}.disqus.com/count.js" async></script>
+      {% endif %}
+    {% endif %}
+    
+    {{ '//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js' | script_tag }}
+    {{ 'app.js' | asset_url | script_tag }}
+    
+    {% if settings.show_multiple_currencies %}
+      {% include 'currencies' %}
+    {% endif %}
+    {% if settings.show_shipping_calculator and template contains "cart" %}
+      {% include 'cart-shipping-scripts' %}
+    {% endif %}
+
+    {% unless settings.performance == "sport" or template contains "customer" %}
+      <script src="{{ 'instantclick.min.js' | asset_url }}" data-no-instant></script>
+
+      <script data-no-instant>
+
+      function inIframe() {
+        try {
+          return window.self !== window.top;
+        } catch (e) {
+          return true;
+        }
+      }
+
+      if (!inIframe()){
+        InstantClick.on('change', function() {
+
+          $('head script[src*="shopify"]').each(function() {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = $(this).attr('src');
+
+            $('body').append( script );
+          });
+
+          $('html').removeClass('remodal-is-locked');
+
+        });
+        InstantClick.init();
+      }
+      </script>
+    {% endunless %}
+
+    <script>
+      {{ settings.custom_scripts }}
+    </script>
+    <!-- BEEKETINGSCRIPT CODE START -->{% include 'bk-tracking' %}<!-- BEEKETINGSCRIPT CODE END -->
+    </div>
+    
+   <div id="mm-blocker"></div>
+ {% include 'sweettooth-initializer' %}
+
+ {% include 'sweettooth-tab-widget' %}
+
+  <script>
+    {% if template contains 'product.alternate' %}
+    jQuery(document).ready(function($) {
+      /*----------change size-----------*/
+      // desktop
+      if($(window).width() >= 768) {
+        $(".desktop .model-change").click(function(e){
+          $(".desktop .model-legend-nav").addClass('active');
+        });
+
+        $(".desktop .model-legend-nav-close").click(function(e){
+          $(this).parent('.model-legend-nav').removeClass('active');
+        });
+
+        $(".desktop .model-legend-input").change(function(e){
+          var $this = $(this);
+          $this.parents('.model-legend-nav').removeClass('active');
+          $.cookie("size_model", $this.val());
+          $('.gallery-wrap .model').hide().filter('.model-'+$this.val()).show();
+          $('.desktop.change-size .change-label-value').html($this.prev('.for_value').text());
+        });
+
+        if($.cookie('size_model') != null) {
+          var $val = $.cookie('size_model');
+          if($('.desktop .model-legend-input[value="'+$val+'"]').length == 1){
+            $('.desktop .model-legend-input[value="'+$val+'"]').prop('checked', true);
+            $('.gallery-wrap .model').hide();
+            $('.gallery-wrap .model-'+$val).show();
+            var $size_model = $('.desktop .model-legend-input[value="'+$val+'"]').prev('.for_value').text();
+            $('.desktop.change-size .change-label-value').html($size_model);
+          }
+          else {
+            $(".gallery-wrap").each(function(e){
+              $(".model:first", this).show();
+            });
+            $('.desktop .model-legend-item .model-legend-input:first').prop('checked', true);
+            var $size_model = $('.desktop .model-legend-item .model-legend-input:first').prev('.for_value').text();
+            $('.desktop.change-size .change-label-value').html($size_model);
+          }
+        }
+        else{
+          $(".gallery-wrap").each(function(e){
+            $(".model:first", this).show();
+          });
+          $('.desktop .model-legend-item .model-legend-input:first').prop('checked', true);
+          var $size_model = $('.desktop .model-legend-item .model-legend-input:first').prev('.for_value').text();
+          $('.desktop.change-size .change-label-value').html($size_model);
+        }
+      }
+      // mobile
+      else {
+        $(".mobile .model-change").click(function(e){
+          $(".mobile .model-legend-nav").addClass('active');
+        });
+
+        $(".mobile .model-legend-nav-close").click(function(e){
+          $(this).parent('.model-legend-nav').removeClass('active');
+        });
+
+        $(".mobile .model-legend-input").change(function(e){
+          var $this = $(this);
+          $this.parents('.model-legend-nav').removeClass('active');
+          $.cookie("size_model_mobile", $this.val());
+          $('.gallery-wrap .model').hide().filter('.model-'+$this.val()).show();
+          $('.mobile.change-size .change-label-value').html($this.prev('.for_value').text());
+        });
+
+        if($.cookie('size_model_mobile') != null) {
+          var $val = $.cookie('size_model_mobile');
+          if($('.mobile .model-legend-input[value="'+$val+'"]').length == 1) {
+            $('.mobile .model-legend-input[value="'+$val+'"]').attr('checked', true);
+            $('.gallery-wrap .model').hide();
+            $('.gallery-wrap .model-'+$val).show();
+            var $size_model = $('.mobile .model-legend-input[value="'+$val+'"]').prev('.for_value').text();
+            $('.mobile.change-size .change-label-value').html($size_model);
+          }
+          else {
+            $(".gallery-wrap").each(function(e){
+              $(".model:first", this).show();
+            });
+            $('.mobile .model-legend-item .model-legend-input:first').attr('checked', true);
+            var $size_model = $('.mobile .model-legend-item .model-legend-input:first').prev('.for_value').text();
+            $('.mobile.change-size .change-label-value').html($size_model);
+          }
+        }
+        else {
+          $(".gallery-wrap").each(function(e){
+            $(".model:first", this).show();
+          });
+          $('.mobile .model-legend-item .model-legend-input:first').attr('checked', true);
+          var $size_model = $('.mobile .model-legend-item .model-legend-input:first').prev('.for_value').text();
+          $('.mobile.change-size .change-label-value').html($size_model);
+        }
+      }
+    })
+    {% endif %}
+  </script>
+
+  {% include 'livechat_chat_window' %}
+
+  {% if template == 'cart' %}
+    {% include 'special-offers' %}
+  {% endif %}
+
+</body>
+</html>
+{% endcapture %}
+{% assign content = content | replace_first: '<!DOCTYPE', '!DOCTYPE' | split: ' <' %}
+{% for html in content %}{% assign htmlblock = html | strip | prepend: ' <' %}{{htmlblock | replace: ' </', '</'}}{% endfor %}

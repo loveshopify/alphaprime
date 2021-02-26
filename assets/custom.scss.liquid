@@ -1,0 +1,82 @@
+@charset 'utf-8';
+
+$small: 480px;
+$medium: 799px;
+$large: 1024px;
+$xlarge: 1280px;
+
+ul.social_icons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-service-icons {
+  text-align: center;
+  display: flex;
+  // justify-content: space-around;
+}
+.product-service-icons>div {
+  margin: auto -6px;
+}
+.product-service-icons img {
+	max-height: 120px
+}
+
+form#email_signup {
+  margin: auto;
+}
+
+/*_________________  Accordion
+________________________________________*/
+.accordion {
+	margin: 1rem 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid #e5e5e5;
+}
+
+.accordion-item {
+	border-bottom: 1px solid #e5e5e5;
+	margin-bottom: 0px;
+}
+
+/* Thumb */
+.accordion-thumb {
+	margin: 0;
+	padding: .8rem 0;
+	cursor: pointer;
+	font-weight: normal;
+	
+	// Chevron
+	&::before {
+		content: '';
+		display: inline-block;
+		height: 7px;
+		width: 7px;
+		margin-right: 1rem;
+		margin-left: .5rem;
+		vertical-align: middle;
+		border-right: 1px solid;
+		border-bottom: 1px solid;
+		transform: rotate(-45deg);
+		transition: transform .2s ease-out;
+	}
+}
+
+/* Panel */
+.accordion-panel {
+	margin: 0;
+	padding-bottom: .8rem;
+	display: none;
+}
+
+/* Active */
+.accordion-item.is-active {
+	.accordion-thumb::before {
+		transform: rotate(45deg);
+	}
+}
+
+.slideshow_animation--fade .gallery-cell.is-selected {
+    border: 1px solid #ebebeb;
+}

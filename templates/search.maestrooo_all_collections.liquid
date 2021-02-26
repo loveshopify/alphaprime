@@ -1,0 +1,45 @@
+{%- comment -%}
+This template has been created automatically by one of the Maestrooo's application (for instance: SuperFields...).
+
+We use those templates to provide additional features to our apps, and you SHOULD NOT delete this template if you
+are still using our apps. Otherwise, the apps may not work as expected.
+{%- endcomment -%}
+
+{%- layout none -%}
+
+{%- capture all_collections -%}
+  [
+    {%- assign sorted_collections = collections | sort: 'published_at' | reverse -%}
+    
+    {%- for collection in sorted_collections -%}
+      {%- assign rules_map = collection | json | map: 'rules' | append: '' -%}
+
+      {%- if rules_map == '[nil]' -%}
+        {%- assign is_smart_collection = false -%}
+      {%- else -%}
+        {%- assign is_smart_collection = true -%}
+      {%- endif -%}
+      
+      {
+        "id": {{ collection.id }},
+        "object": {% if is_smart_collection %}"smart_collection"{% else %}"custom_collection"{% endif %},
+        "title": {{ collection.title | json }},
+        "url": {{ shop.secure_url | append: collection.url | json }},
+        "handle": {{ collection.handle | json }},
+        "image": {{ collection.image.src | json }},
+        "products_count": {{ collection.products_count }},
+        "published_at": {{ collection.published_at | date: '%FT%T%:z' | json }},
+        "template_suffix": {{ collection.template_suffix | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+{%- endcapture -%}
+
+callback_maestrooo_all_collections_{{ search.terms | md5 }}({
+  "object": "list",
+  "data": {{ all_collections }},
+  "meta": {
+    "total_count": {{ collections.size }},
+    "has_more": false
+  }
+})

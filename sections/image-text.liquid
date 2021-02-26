@@ -1,0 +1,238 @@
+{% comment %}
+** Image with text (half and half view) - homepage partial **
+- Draggable section
+- Uses blocks
+{% endcomment %}
+{% if section.settings.frontpage_grid_style == false %}
+  <div class="container">
+{% endif %}
+    <div class="featured_collections clearfix across-{{section.settings.featured_links_per_row}} image-align--{{ section.settings.frontpage_image_position }}">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          <section class="featured-link--section featured-link--image section-{{ forloop.index }}" {{ block.shopify_attributes }}>
+            <div class="featured-link--{{ section.settings.featured_links_image_width }} featured-link--image featured-link--margin">
+              <div class="featured-link--wrap">
+                <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} title="{{ block.settings.title }}">
+                  {% if block.settings.image %}
+                    <img  src="{{ block.settings.image | img_url: '100x' }}"
+                          alt="{% if block.settings.image.alt != blank %}{{ block.settings.image.alt | escape }}{% else %}{{ block.settings.title | escape }}{% endif %}"
+                          class="lazyload full-width-image {{ settings.image_loading_style }}"
+                          data-sizes="auto"
+                          data-src="{{ block.settings.image | img_url: '1600x' }}"
+                          data-srcset=" {{ block.settings.image | img_url: '400x' }} 400w,
+                                        {{ block.settings.image | img_url: '500x' }} 500w,
+                                        {{ block.settings.image | img_url: '600x' }} 600w,
+                                        {{ block.settings.image | img_url: '700x' }} 700w,
+                                        {{ block.settings.image | img_url: '800x' }} 800w,
+                                        {{ block.settings.image | img_url: '900x' }} 900w,
+                                        {{ block.settings.image | img_url: '1200x' }} 1200w,
+                                        {{ block.settings.image | img_url: '1600x' }} 1600w"
+                        />
+                  {% else %}
+                    {% capture i %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+                    {{ 'collection-' | append: i | placeholder_svg_tag: 'placeholder-svg placeholder-svg--promotions' }}
+                  {% endif %}
+                </a>
+              </div>
+            </div>
+            <div class="featured-link--{{ section.settings.featured_links_image_width }}">
+              <div class="info text-align--{{section.settings.frontpage_text_align}}">
+                <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="collection_title">
+                  {{ block.settings.title }}
+                </a>
+                {% if block.settings.text != blank %}
+                  <div class="description">{{ block.settings.text }}</div>
+                {% endif %}
+                {% if block.settings.button_label != blank %}
+                  <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="button">
+                    {{ block.settings.button_label }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+        {% endfor %}
+      {% endif %}
+    </div>
+{% if section.settings.frontpage_grid_style == false %}
+  </div>
+{% endif %}
+
+<style>
+  {% if section.settings.frontpage_grid_style == false and section.settings.featured_links_per_row == '1' %}
+    .featured-link--section {
+      margin-bottom: 3%;
+    }
+    @media only screen and (max-width: 480px) {
+      .featured-link--section {
+        margin-bottom: 10%;
+      }
+    }
+    .featured-link--half {
+      width: 45%;
+    }
+    .featured-link--margin {
+      {% if section.settings.frontpage_image_position == 'right' %}
+        margin-left: 3%;
+      {% else %}
+        margin-left: 0%;
+        margin-right: 3%;
+      {% endif %}
+    }
+    .featured-link--section:nth-child(even) .featured-link--margin {
+      {% if section.settings.frontpage_image_position == 'right' %}
+        margin-left: 0%;
+        margin-right: 3%;
+      {% else %}
+        margin-left: 3%;
+        margin-right: 0%;
+      {% endif %}
+    }
+  {% elsif section.settings.frontpage_grid_style == false and section.settings.featured_links_per_row == '2' %}
+    @media only screen and (max-width: 480px) {
+      .featured-link--section {
+        margin-bottom: 10%;
+      }
+    }
+    .featured-link--margin {
+      margin-right: 0%;
+      margin-left: 0%;
+    }
+    .featured-link--section:nth-child(even) .featured-link--margin {
+      margin-left: 0%;
+      margin-right: 0%;
+    }
+  {% endif %}
+</style>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "class": "image-with-text-section",
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "select",
+      "id": "featured_links_per_row",
+      "label": "Images per row",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "featured_links_image_width",
+      "label": "Image width",
+      "options": [
+        {
+          "value": "half",
+          "label": "Half"
+        },
+        {
+          "value": "full",
+          "label": "Full"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "frontpage_text_align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "frontpage_image_position",
+      "label": "First image position",
+      "info": "Subsequent images will appear staggered",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "frontpage_grid_style",
+      "label": "Wide display"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image with text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Your headline"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Promotion description appears here.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "View all"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Image with text",
+    "category": "Image",
+    "settings": {
+      "featured_links_per_row": "1",
+      "frontpage_text_align": "left"
+    },
+    "blocks": [
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      }
+    ]
+  }]
+}
+{% endschema %}

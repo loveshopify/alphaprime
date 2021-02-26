@@ -1,0 +1,96 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{% assign file_extension = 'png' %}
+
+{% assign swatch = product-swatch %}
+{% assign found_option = false %}
+{% assign is_color = false %}
+{% assign option_index = 0 %}
+
+{% for option in product.options %}
+  {% if option == swatch %}
+    {% assign found_option = true %}
+    {% assign option_index = forloop.index0 %}
+    {% assign downcased_option = swatch | downcase %}
+    {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+      {% assign is_color = true %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% assign hidden_swatches = product.metafields.sf_product.hidden_swatches | downcase | split: ',' %}
+
+<div class="swatch clearfix" data-option-index="{{ option_index }}">
+  <div class="option_title">{{ swatch }}</div>
+  {% assign values = '' %}  
+  {% for variant in product.variants %}
+    {% assign value = variant.options[option_index] %}
+
+    {% assign skip_swatch = false %}
+    {% if is_color %}
+      {% assign color_name = value | escape | downcase %}
+      {% for _color_name in hidden_swatches %}
+        {% if color_name == _color_name %}
+          {% assign skip_swatch = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if skip_swatch %}
+     {% continue %}
+    {% endif %}
+
+    {% unless values contains value %}
+      {% assign values = values | join: ',' %}
+      {% assign values = values | append: ',' | append: value %}
+      {% assign values = values | split: ',' %}     
+      
+      <input id="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} />
+      <div {% if template.suffix == 'dropdown' %}style="display: none;"{% endif %} data-value="{{ value | escape }}" class="swatch-element {% if is_color %}color {% endif %}{{ value | handle }}-swatch {% if variant.available %}available{% else %}soldout{% endif %}">
+        {% if is_color %}
+          <div class="tooltip">{{ value }}</div>
+          <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}" style="background-image: url({{ value | handle | append: '.' | append: file_extension | asset_img_url: '50x' | prepend: 'https:' }}); background-color: {{ value | split: ' ' | last | handle }};">
+            <span class="crossed-out"></span>
+          </label>
+        {% else %}
+          <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">
+            {{ value }}
+            <span class="crossed-out"></span>
+          </label>
+        {% endif %}
+      </div>      
+    {% endunless %}
+  {% endfor %}
+  {% if template.suffix == 'dropdown' %}
+    {% assign values = '' %}  
+    <select name="option-{{ option_index }}" class="variant-dropdown">
+      {% for variant in product.variants %}
+        {% assign value = variant.options[option_index] %}
+
+        {% assign skip_swatch = false %}
+        {% if is_color %}
+          {% assign color_name = value | escape | downcase %}
+          {% for _color_name in hidden_swatches %}
+            {% if color_name == _color_name %}
+              {% assign skip_swatch = true %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if skip_swatch %}
+        {% continue %}
+        {% endif %}
+
+        {% unless values contains value %}
+          {% assign values = values | join: ',' %}
+          {% assign values = values | append: ',' | append: value %}
+          {% assign values = values | split: ',' %}
+          
+          <option value="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">{{ value | escape }}</option> 
+        {% endunless %}
+      {% endfor %}
+    </select>
+  {% endif %}
+</div>

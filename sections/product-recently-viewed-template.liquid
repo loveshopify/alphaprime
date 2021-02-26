@@ -1,0 +1,314 @@
+{% comment %}
+{% assign pro_index ='' %}
+  {% for op in product.options %}
+    {% assign op_handle = op | downcase %}
+     {% if op_handle contains 'color' or op_handle contains 'colour' %}
+        {% assign pro_index = forloop.index0 %}
+     {% endif %}
+  {% endfor %}
+
+{% assign variant_url = '' %}
+{% assign variant_image = '' %}
+{% if pro_index != '' %}
+   {% assign pro_values = '' %}
+   {% assign pro_numvalues = '' %}
+   {% assign pro_option_index = pro_index %}
+  {% for product_vari in product.variants %}
+    {% assign pro_value = product_vari.options[pro_index] %}
+    {% assign pro_numvalue = product_vari.options[pro_option_index] %}
+      {% unless pro_values contains pro_value %}  
+          {% assign pro_values = pro_values | join: ',' %}
+          {% assign pro_values = pro_values | append: ',' | append: pro_value %}
+          {% assign pro_values = pro_values | split: ',' %}
+          {% assign pro_numvalues = pro_numvalues | join: ',' %}
+          {% assign pro_numvalues = pro_numvalues | append: ',' | append: pro_numvalues %}
+          {% assign pro_numvalues = pro_numvalues | split: ',' %}
+             {% assign variant_url = product_vari.url %}
+             {% assign variant_image = product_vari.image.src %}
+  
+    {% assign secondary_image = '' %}
+    {% if pro_index != '' %}
+    {% assign color_name = pro_value | downcase %}
+    {% assign count = 1 %}
+     {% for image in product.images %}
+          {% assign img_alt = image.alt | downcase %}
+        {% if img_alt == color_name %}
+            {% if count == 2 %}
+              {% assign secondary_image = image.src %}
+            {% endif %}
+            {% assign count = count | plus:1 %}
+        {% endif %}
+     {% endfor %}
+    {% endif %}
+       
+
+   <div class="js-recently-viewed-product">
+  <div class="product-wrap">
+      <div class="relative product_image swap-{% if pro_index != '' %}{% if secondary_image != '' %}true{% else %}false{% endif %}{% else %}{{ settings.collection_secondary_image }}{% endif %}">
+        <a href="{% if variant_url != '' %}{{ variant_url }}{% else %}{{ product.url | within: collection }}{% endif %}" itemprop="url">
+          <div class="image__container" style="{% if settings.align_height %} max-width: {{ product_set_width }}px; {% else %} max-width: {{- product.featured_image.width -}}px; {% endif %}">
+            {% if variant_image != '' and variant_image %}
+                <img  src="{{ variant_image | product_img_url: '100x' }}"
+                  alt="{{ alt_text | escape }}"
+                  class="lazyload {{ settings.image_loading_style }}"
+                  style="{{ align_height_value }} max-width: {{- variant_image.width -}}px;"
+                  data-sizes="100vw"
+                  data-src="{{ variant_image | product_img_url: '900x' }}"
+                  data-srcset=" {{ variant_image | product_img_url: '300x' }} 300w,
+                                {{ variant_image | product_img_url: '400x' }} 400w,
+                                {{ variant_image | product_img_url: '500x' }} 500w,
+                                {{ variant_image | product_img_url: '600x' }} 600w,
+                                {{ variant_image | product_img_url: '700x' }} 700w,
+                                {{ variant_image | product_img_url: '800x' }} 800w,
+                                {{ variant_image | product_img_url: '900x' }} 900w"
+                />
+            {% else %}
+            <img  src="{{ product.featured_image | product_img_url: '100x' }}"
+                  alt="{{ alt_text | escape }}"
+                  class="lazyload {{ settings.image_loading_style }}"
+                  style="{{ align_height_value }} max-width: {{- product.featured_image.width -}}px;"
+                  data-sizes="100vw"
+                  data-src="{{ product.featured_image | product_img_url: '900x' }}"
+                  data-srcset=" {{ product.featured_image | product_img_url: '300x' }} 300w,
+                                {{ product.featured_image | product_img_url: '400x' }} 400w,
+                                {{ product.featured_image | product_img_url: '500x' }} 500w,
+                                {{ product.featured_image | product_img_url: '600x' }} 600w,
+                                {{ product.featured_image | product_img_url: '700x' }} 700w,
+                                {{ product.featured_image | product_img_url: '800x' }} 800w,
+                                {{ product.featured_image | product_img_url: '900x' }} 900w"
+                />
+            {% endif %}
+              </div>
+          
+            {% if settings.collection_secondary_image != blank %}
+           {% if pro_index != '' %}
+           {% if secondary_image != '' %}
+              <div class="image__container" style="max-width: {% if secondary_image != blank %}{{- secondary_image.width -}}px{% else %}{{- product.featured_image.width -}}px{% endif %}; ">
+                <img src="{% if secondary_image != blank %}{{ secondary_image | product_img_url: '900x' }}{% else %}{{ product.featured_image | product_img_url: '900x' }}{% endif %}"
+                class="secondary lazyload"
+                alt="{{ alt_text | escape }}"
+                />
+              </div>
+          {% endif %}
+             {% else %}
+                <div class="image__container" style="max-width: {% if product.images[1] != blank %}{{- product.images[1].width -}}px{% else %}{{- product.featured_image.width -}}px{% endif %}; ">
+                <img src="{% if product.images[1] != blank %}{{ product.images[1] | product_img_url: '900x' }}{% else %}{{ product.featured_image | product_img_url: '900x' }}{% endif %}"
+                class="secondary lazyload"
+                alt="{{ alt_text | escape }}"
+                />
+              </div>
+              {% endif %}
+            {% endif %}
+          </a>
+        {% include "product-details" %}
+      </div>
+      <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{% if variant_url != '' %}{{ variant_url }}{% else %}{{ product.url | within: collection }}{% endif %}" itemprop="url">
+        {% include "product-info" %}
+        </a>
+      </div>
+       {% comment %}        
+    {% include 'collection-swatch' %}
+      {% endcomment %}
+  </div>
+
+      {% endunless %}
+  {% endfor %}
+{% else %}
+  <div class="js-recently-viewed-product">
+  <div class="product-wrap">
+      <div class="relative product_image swap-{{ settings.collection_secondary_image }}">
+        <a href="{{ product.url | within: collection }}" itemprop="url">
+          <div class="image__container" style="{% if settings.align_height %} max-width: {{ product_set_width }}px; {% else %} max-width: {{- product.featured_image.width -}}px; {% endif %}">
+            <img src="{{ product.featured_image | product_img_url: '100x' }}"
+              alt="{{ alt_text | escape }}"
+              class="lazyload {{ settings.image_loading_style }}"
+              style="{{ align_height_value }} max-width: {{- product.featured_image.width -}}px;"
+              data-sizes="100vw"
+              data-src="{{ product.featured_image | product_img_url: '900x' }}"
+              data-srcset=" {{ product.featured_image | product_img_url: '300x' }} 300w,
+                {{ product.featured_image | product_img_url: '400x' }} 400w,
+                {{ product.featured_image | product_img_url: '500x' }} 500w,
+                {{ product.featured_image | product_img_url: '600x' }} 600w,
+                {{ product.featured_image | product_img_url: '700x' }} 700w,
+                {{ product.featured_image | product_img_url: '800x' }} 800w,
+                {{ product.featured_image | product_img_url: '900x' }} 900w"
+            />
+            {% if settings.collection_secondary_image != blank %}
+              <img
+                src="{% if product.images[1] != blank %}{{ product.images[1] | product_img_url: '900x' }}{% else %}{{ product.featured_image | product_img_url: '900x' }}{% endif %}"
+                class="secondary lazyload"
+                alt="{{ alt_text | escape }}"
+              />
+            {% endif %}
+            </div>
+          </a>
+        {% include "product-details" %}
+      </div>
+      <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ product.url | within: collection }}" itemprop="url">
+        {% include "product-info" %}
+        </a>
+      </div>
+    {% comment %}
+    {% include 'collection-swatch' %}
+    {% endcomment %}
+  </div>
+{% endif %}
+
+{% endcomment %}
+
+
+
+{% comment %}
+** Product snippet - only used as AJAX reference for recently viewed **
+{% endcomment %}
+
+{% if settings.align_height %}
+  {% assign collection_height = settings.collection_height | plus: 0 %}
+  {% assign product_aspect_ratio = product.featured_image.aspect_ratio | plus: 0 %}
+  {% assign product_set_width = product_aspect_ratio | times: collection_height %}
+
+  {% if product.featured_image.width >= product.featured_image.height %}
+    {% assign align_height_value = 'width: 100%; height: auto;' %}
+  {% else %}
+    {% assign align_height_value = 'width: 100%;' %}
+  {% endif %}
+
+{% endif %}
+
+<div class="js-recently-viewed-product">
+  <div class="product-wrap">
+      <div class="relative product_image swap-{{ settings.collection_secondary_image }}">
+        <a href="{{ product.url | within: collection }}" itemprop="url">
+          <div class="image__container" style="{% if settings.align_height %} max-width: {{ product_set_width }}px; {% else %} max-width: {{- product.featured_image.width -}}px; {% endif %}">
+            <img
+              src="{{ product.featured_image | product_img_url: '100x' }}"
+              alt="{{ alt_text | escape }}"
+              class="lazyload {{ settings.image_loading_style }}"
+              style="{{ align_height_value }} max-width: {{- product.featured_image.width -}}px;"
+              data-sizes="100vw"
+              data-src="{{ product.featured_image | product_img_url: '900x' }}"
+              data-srcset=" {{ product.featured_image | product_img_url: '300x' }} 300w,
+                {{ product.featured_image | product_img_url: '400x' }} 400w,
+                {{ product.featured_image | product_img_url: '500x' }} 500w,
+                {{ product.featured_image | product_img_url: '600x' }} 600w,
+                {{ product.featured_image | product_img_url: '700x' }} 700w,
+                {{ product.featured_image | product_img_url: '800x' }} 800w,
+                {{ product.featured_image | product_img_url: '900x' }} 900w"
+              />
+            {% if settings.collection_secondary_image != blank %}
+              <img
+                src="{% if product.images[1] != blank %}{{ product.images[1] | product_img_url: '900x' }}{% else %}{{ product.featured_image | product_img_url: '900x' }}{% endif %}"
+                class="secondary lazyload"
+                alt="{{ alt_text | escape }}"
+              />
+            {% endif %}
+            </div>
+          </a>
+        {% comment %}{% include "product-details" %}{% endcomment %}
+         
+        
+{% assign collection_handles = product.collections | map: 'handle' %}
+<div class="thumbnail-overlay">
+  <a href="{{ product.url | within: collection }}" itemprop="url" class="hidden-product-link">{{ product.title }}</a>
+  <div class="info">
+    {% if settings.thumbnail_hover_enabled and settings.quick_shop_enabled %}
+      {% include "product-info" %}
+      {% include 'quick-shop-button' %}
+    {% elsif settings.thumbnail_hover_enabled %}
+      {% include "product-info" %}
+    {% elsif settings.quick_shop_enabled %}
+      {% include 'quick-shop-button' %}
+    {% endif %}
+  </div>
+  
+  
+    
+  
+ 
+  {% unless collection_handles contains 'coming-soon' %}
+  {% assign pro_index_size = '' %}
+  {% for op in product.options %}
+     {% assign op_handle = op | downcase %}
+     {% if op_handle contains 'size' or op_handle contains 'sizes' %}
+       {% assign pro_index_size = forloop.index0 %}
+     {% endif %}
+  {% endfor %}
+  
+  
+  {% if pro_index_size != '' %}
+   <div class="variant-size">
+     <form method="post" action="/cart/add" id="{{product.id}}" enctype="multipart/form-data">
+        {% assign pro_color_vari = product_vari.options[pro_index] %}
+         <select id="product-select" name="id" class="hidden">
+        {% for size_vari in product.variants %}
+             {% assign pro_size_vari = size_vari.options[pro_index_size] %}
+             {% assign color_vari = size_vari.options[pro_index] %}
+             {% if color_vari == pro_color_vari %}
+              {% if size_vari.available %}
+                  <option value="{{ size_vari.id }}" data-sku="{{ size_vari.sku }}" data-size="{{pro_size_vari}}">{{ size_vari.title }}</option>
+               {% else %}
+                  <option value="{{ size_vari.id }}" disabled="disabled">Sold Out</option>
+             {% endif %}
+            {% endif %}      
+       {% endfor %}
+       </select>
+
+       
+        <div class="swatch_options">
+          <div class="swatch clearfix"> 
+            <div class="option_title">Size</div>
+              {% for size_vari in product.variants %}
+             {% assign pro_size_vari = size_vari.options[pro_index_size] %}
+             {% assign color_vari = size_vari.options[pro_index] %}
+             {% if color_vari == pro_color_vari %}
+            
+                <div data-value="{{pro_size_vari}}" class="swatch-element s-swatch {% if size_vari.available %}available{% else %}soldout{% endif %}"> 
+                  <label>
+                    {{pro_size_vari}}
+                    <span class="crossed-out"></span>
+                  </label>
+                  <svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" class="checkmark">
+            <path fill="none" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M9,17l3.9,3.9c0.1,0.1,0.2,0.1,0.3,0L23,11"/>
+          </svg>
+                </div>
+            {% endif %}      
+       {% endfor %} 
+       </div> 
+      </div> 
+       <input type="submit" value="add" style="display:none;" />
+  </form>
+  </div>
+  {% endif %}
+   {% endunless %}
+   
+  
+</div>
+<div class="banner_holder">
+  {% if product.available %}
+    {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
+      <div class="sale_banner thumbnail_banner">{{ 'collections.general.sale' | t }}</div>
+    {% endif %}
+  {% endif %}
+  {% if collection_handles contains 'new' %}
+    <div class="new_banner thumbnail_banner">{{ 'collections.general.new' | t }}</div>
+  {% endif %}
+  {% if collection_handles contains 'pre-order' %}
+    <div class="preorder_banner thumbnail_banner">{{ 'collections.general.pre_order' | t }}</div>
+  {% endif %}
+</div>
+
+
+
+
+
+        
+      </div>
+      <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ product.url | within: collection }}" itemprop="url">
+        {% include "product-info" %}
+        </a>
+      </div>
+    {% include 'collection-swatch' %}
+  </div>
+</div>
+
+

@@ -1,0 +1,12 @@
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="Nav---9" transform="translate(-1297.000000, -84.000000)" stroke="#000000" stroke-width="2">
+            <g id="Bag" transform="translate(925.000000, 61.000000)">
+                <g id="Close" transform="translate(374.000000, 25.000000)">
+                    <path d="M0,11.5708382 L11.5708382,0" id="Line"></path>
+                    <path d="M0,11.5708382 L11.5708382,0" id="Line" transform="translate(5.785419, 5.785419) scale(-1, 1) translate(-5.785419, -5.785419) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

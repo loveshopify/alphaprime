@@ -1,0 +1,49 @@
+{% if settings.mailchimp_link != blank %}
+<style>
+  .subscribe-form,
+  .subscribe-form form {
+    width: 100%;
+  }
+  .subscribe-form input[name="EMAIL"] {
+    display: inline-block;
+    max-width: 280px;
+  }
+</style>
+
+<div class="subscribe-form">
+  <div class="klaviyo-form-JY8diV"></div>
+  {% comment %}
+  <form action="{{ settings.mailchimp_link }}" method="post" name="mc-embedded-subscribe-form" target="_blank">
+    {% if settings.display_first_name %}
+      <input type="text" value="" name="FNAME" placeholder="{{ 'general.newsletter_form.subscriber_first_name' | t }}">
+    {% endif %}
+    {% if settings.display_last_name %}
+      <input type="text" value="" name="LNAME" placeholder="{{ 'general.newsletter_form.subscriber_last_name' | t }}">
+    {% endif %}
+    <input type="email" value="" name="EMAIL" placeholder="{{ 'general.newsletter_form.subscriber_email' | t }}"><!--
+    --><input type="submit" value="{{ 'general.newsletter_form.submit_2' | t }}" class="action_button sign_up" name="subscribe" />
+  </form>
+  {% endcomment %}
+</div>
+
+<script>
+  jQuery(document).ready(function($) {
+    $(document).on('submit', '.subscribe-form form', function(event) {
+      event.preventDefault()
+      var $form = $(this)
+      
+      $.ajax({
+        type: $form.attr('method'),
+        url: $form.attr('action'),
+        data: $form.serialize(),
+        cache: false,
+        dataType: 'jsonp',
+        contentType: 'application/json; charset=utf-8'
+      }).always(function() {
+        $form.trigger('reset')
+        $(window).trigger('subscribeForm:submit', $form)
+      })
+    })
+  })
+</script>
+{% endif %}

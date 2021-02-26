@@ -1,0 +1,698 @@
+{% comment %}
+  Customize your kit section
+{% endcomment %}
+
+{{ '//cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js' | script_tag }}
+{{ '//cdnjs.cloudflare.com/ajax/libs/vue-router/3.0.1/vue-router.min.js' | script_tag }}
+{{ '//sdks.shopifycdn.com/js-buy-sdk/v1/latest/index.umd.min.js' | script_tag }}
+
+<style>
+#customize-your-kit > h1 {
+  position: relative;
+  padding: 40px 0 90px;
+  margin-bottom: -50px;
+  text-align: center;
+  color: {{ section.settings.header_text_color }};
+  background-color: {{ section.settings.header_background_color }};
+}
+#customize-your-kit > h1:before,
+#customize-your-kit > h1:after {
+  content: "";
+  position: absolute;
+  width: 1000%;
+  top: 0;
+  bottom: 0;
+  background-color: {{ section.settings.header_background_color }};
+}
+#customize-your-kit > h1:before {
+  right: 100%;
+}
+#customize-your-kit > h1:after {
+  left: 100%;
+}
+#customize-your-kit nav {
+  margin-bottom: 50px;
+}
+#customize-your-kit nav a {
+  float: left;
+  display: block;
+  line-height: 50px;
+  text-align: center;
+  text-transform: uppercase;
+  background-color: #fff;
+  opacity: 0.6;
+}
+#customize-your-kit nav[data-steps="2"] a {
+  width: 50%;
+}
+#customize-your-kit nav[data-steps="3"] a {
+  width: 33.33%;
+}
+#customize-your-kit nav[data-steps="4"] a {
+  width: 25%;
+}
+#customize-your-kit nav a.complete:before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 50px;
+  margin-left: -20px;
+  margin-right: 10px;
+  vertical-align: top;
+  background: transparent url({{ 'checkmark.png' | asset_img_url: 'original' }}) no-repeat center/20px;
+}
+#customize-your-kit nav .router-link-active {
+  padding: 5px 0;
+  margin-top: -10px;
+  opacity: 1;
+}
+#customize-your-kit .kit-content {
+  position: relative;
+  min-height: 600px;
+  text-align: center;
+  overflow: hidden;
+}
+#customize-your-kit .kit-content.loading:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  background: white url({{ 'ajax-loader.gif' | asset_img_url: 'original' }}) no-repeat center 100px;
+}
+#customize-your-kit .kit-content > p {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+}
+#customize-your-kit .kit-content > p:before,
+#customize-your-kit .kit-content > p:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  display: inline-block;
+  width: 1000%;
+  height: 1px;
+  background-color: #000000;
+}
+#customize-your-kit .kit-content > p:before {
+  right: 100%;
+  margin-right: 20px;
+}
+#customize-your-kit .kit-content > p:after {
+  left: 100%;
+  margin-left: 20px;
+}
+#customize-your-kit .product-list {
+  margin: 0 -10px;
+}
+#customize-your-kit .product {
+  position: relative;
+  padding: 0 10px;
+  margin-bottom: 30px;
+}
+#customize-your-kit .product.selected:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 48px;
+  height: 48px;
+  background: transparent url({{ 'checkmark.png' | asset_img_url: 'original' }}) no-repeat center;
+}
+#customize-your-kit .product img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+#customize-your-kit .product .product-details {
+  margin-top: 20px;
+  text-align: center;
+  color: #808080;
+}
+#customize-your-kit .product .product-details .title,
+#customize-your-kit .product .product-details .price {
+  display: block;
+  margin-bottom: 5px;
+  font-size: inherit;
+  line-height: 1.2;
+}
+#customize-your-kit .product .product-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  animation: 200ms fadeIn both;
+}
+#customize-your-kit .product .product-variants {
+  padding: 15px 5px;
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  background-color: #282828;
+  background-color: rgba(40, 40, 40, 0.5);
+}
+#customize-your-kit .product .product-variants span {
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  line-height: 40px;
+  margin: 0 5px 5px;
+  color: white;
+  border: 1px solid white;
+  cursor: pointer;
+}
+#customize-your-kit .product .product-variants span.selected {
+  background-color: #12d87d;
+  border-color: #12d87d;
+}
+#customize-your-kit .product .product-variants span.unavailable {
+  opacity: 0.6;
+  cursor: default;
+}
+#customize-your-kit .product .product-details-link {
+  display: inline-block;
+  padding: 12px 20px;
+  margin: 20px auto;
+  line-height: 14px;
+  font-size: 15px;
+  text-transform: uppercase;
+  color: white;
+  background-color: black;
+  transition: all 200ms linear;
+}
+#customize-your-kit .product .product-details-link:hover {
+  background: #808080;
+}
+#customize-your-kit .product .product-details-link:after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 14px;
+  background: url({{ 'external_link.png' | asset_img_url: 'original' }}) no-repeat center;
+}
+#customize-your-kit .kit-complete {
+  max-width: 280px;
+  margin: 40px auto;
+}
+#customize-your-kit .kit-complete a {
+  display: inline-block;
+  padding: 16px 38px;
+  line-height: 14px;
+  font-size: 15px;
+  text-transform: uppercase;
+  color: white;
+  background-color: black;
+  transition: all 200ms linear;
+}
+#customize-your-kit .kit-complete a:hover {
+  background: #808080;
+}
+@media only screen and (max-width: 798px) {
+  body.page-customize-your-kit.mobile_nav-fixed--true .main.content {
+    width: 90%;
+    padding-top: 70px;
+  }
+}
+@media all and (min-width: 799px) {
+  #customize-your-kit nav a.complete:before {
+    width: 30px;
+    margin-left: -40px;
+    background-size: 30px;
+  }
+  #customize-your-kit .product {
+    float: left;
+    width: 50%;
+  }
+  #customize-your-kit .product:nth-child(2n+1) {
+    clear: left;
+  }
+  #customize-your-kit .product .product-overlay {
+    display: none;
+  }
+  #customize-your-kit .product.selected .product-overlay,
+  #customize-your-kit .product:hover .product-overlay {
+    display: block;
+  }
+}
+@media all and (min-width: 960px) {
+  #customize-your-kit .kit-content.loading:after {
+    background-position: center;
+  }
+  #customize-your-kit .product {
+    width: 25%;
+  }
+  #customize-your-kit .product:nth-child(2n+1) {
+    clear: none;
+  }
+  #customize-your-kit .product:nth-child(4n+1) {
+    clear: left;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+</style>
+
+
+<div id="customize-your-kit">
+  <h1>{{ page.title }}</h1>
+  {% raw %}
+  <nav v-if="$route.params.action != 'remove'" class="clearfix" :data-steps="steps.length">
+    <router-link v-for="step in steps" :class="{complete: _isStepCompleted(step)}" :to="{params: {step: step}}">Step {{ step }}</router-link>
+  </nav>
+  <router-view></router-view>
+  {% endraw %}
+</div>
+
+<script>
+  var products = [
+  {% for block in section.blocks %}
+    {% if block.type == 'product' %}
+    {
+      kit: {{ block.settings.kit_id }},
+      step: {{ block.settings.step_id }},
+      handle: '{{ block.settings.product }}'
+    },
+    {% endif %}
+  {% endfor %}
+  ]
+  
+  //Vue.config.devtools = true;
+  
+  {% raw %}
+  var router = new VueRouter({
+    routes: [
+      {
+        path: '*',
+        redirect: '/add/kit/1/step/1'
+      },
+      {
+        path: '/:action/kit/:kit/step/:step',
+        component: {
+          template: '<div class="kit-content" :class="{loading: $root.loading}" :data-kit="$route.params.kit" :data-step="$route.params.step">'
+            + '<template v-if="$route.params.action != \'remove\'">'
+              + '<p>Choose one</p>'
+              + '<div v-show="$root.visibleProducts.length" class="product-list clearfix">'
+                + '<div class="product" :class="{selected: $root._isSelected(product.id, product.variants)}" v-for="(product, index) in $root.visibleProducts" :key="index">'
+                  + '<div class="relative">'
+                    + '<img class="product-image" :src="product.variants[0].featured_image.src"/>'
+                    + '<div class="product-overlay">'
+                      + '<div v-if="product.variants.length > 1" class="product-variants">'
+                        + '<p>Select size</p>'
+                        + '<span v-for="variant in product.variants" :class="{selected: $root._isSelected(product.id, variant.id), unavailable: !variant.available}" @click="$root._selectProduct(product.id, variant.id)" :key="variant.id">{{ variant.options[1] }}</span>'
+                      + '</div>'
+                      + '<p v-else><button type="button" class="action_button" @click="$root._selectProduct(product.id, product.variants[0].id)">Select</button></p>'
+                      + '<a class="product-details-link" :href="product.url" target="_blank">More details</a>'
+                    + '</div>'
+                  + '</div>'
+                  + '<div class="product-details">'
+                    + '<span class="title">{{ product.title }}</span>'
+                    + '<span>{{ product.color_option }}</span>'
+                    + '<span class="price"><span class="money" data-currency-usd="$65.00">{{ $root._formatPrice(product.price) }}</span></span>'
+                  + '</div>'
+                + '</div>'
+              + '</div>'
+              + '<div v-if="$root.isKitComplete" class="kit-complete">'
+                + '<a v-if="$route.params.action == \'add\'" href="#addToCart" @click.prevent="$root._addToCart">Add To Bag</a>'
+                + '<a v-else href="#addToCart" @click.prevent="$root._addToCart">Update Your Kit</a>'
+              + '</div>'
+            + '</template>'
+          + '</div>'
+        }
+      }
+    ]
+  })
+
+  Vue.config.devtools = false;
+
+  window.customizeYourKit = new Vue({
+    router,
+    data: {
+      loading: false,
+      loadingDelay: 1000,
+      allProducts: [],
+      selectedProducts: []
+    },
+    computed: {
+      currentKit() {
+        return parseInt(this.$route.params.kit) || 1
+      },
+      currentStep() {
+        return parseInt(this.$route.params.step)
+      },
+      isLastStep() {
+        return this.currentStep == this.steps.length
+      },
+      steps() {
+        return _.map(_.uniqBy(_.sortBy(this.products, 'step'), 'step'), function(product) {
+          return product.step
+        })
+      },
+      products() {
+        return _.filter(this.allProducts, {kit: this.currentKit})
+      },
+      visibleProducts() {
+        var visibleProducts = []
+        
+        _.forEach(_.filter(this.products, {step: this.currentStep}), function(product) {
+          var colorOptionValues = _.get(_.find(product.data.options, {name: 'Color'}), 'values', [])
+          _.forEach(colorOptionValues, function(colorValue) {
+            visibleProducts.push(Object.assign({}, product.data, {variants: _.filter(product.data.variants, {option1: colorValue}), color_option: colorValue}))
+          })
+        })
+
+        return visibleProducts
+      },
+      isKitComplete() {
+        return this.selectedProducts.length === this.steps.length
+      }
+    },
+    watch: {
+      loading(val, oldVal) {
+        if (val && jQuery(window).width() < 799) {
+          var el = jQuery('#customize-your-kit')
+          $('html, body').scrollTop(el.offset().top);
+        }
+      },
+      currentKit(val, oldVal) {
+        this.selectedProducts = []
+        this.$router.push({params: {step: 1}})
+      },
+      currentStep(val, oldVal) {
+        var $vm = this
+        $vm.loading = true
+        _.delay(function() {
+          $vm.loading = false
+        }, $vm.loadingDelay)
+      },
+      selectedProducts(val, oldVal) {
+        if ((val.length + 1) > this.currentStep && val.length < this.steps.length) {
+          this.$router.push({params: {step: this.currentStep + 1}})
+        }
+
+        if (this.isKitComplete && this.isLastStep) {
+          var el = jQuery('#customize-your-kit')
+          $('html, body').animate({scrollTop: el.offset().top + el.height() - 200}, 800);
+        }
+      }
+    },
+    methods: {
+      _getProducts(products) {
+        var $vm = this
+        _.map(products, function(product) {
+          jQuery.getJSON('/products/' + product.handle + '.js', function(json) {
+            $vm.allProducts.push(Object.assign({}, product, {data: json}))
+          })
+        })
+      },
+      _formatPrice(cents) {
+        var dollars = cents / 100
+        return dollars.toLocaleString('en-US', {style: 'currency', currency: 'USD'})
+      },
+      _selectProduct(productId, variantId) {
+        var step = this.currentStep
+        var selectedProducts = this.selectedProducts
+        
+        if (-1 !== _.findIndex(selectedProducts, {step: this.currentStep})) {
+          selectedProducts = _.map(selectedProducts, function(selectedProduct) {
+            if (selectedProduct.step === step) {
+              selectedProduct.productId = productId
+              selectedProduct.variantId = variantId
+            }
+            
+            return selectedProduct
+          })
+        } else {
+          selectedProducts.push({productId, variantId, kit: this.currentKit, step: this.currentStep})
+        }
+
+        this.selectedProducts = selectedProducts
+      },
+      _isStepCompleted(step) {
+        return -1 !== _.findIndex(this.selectedProducts, {step: step})
+      },
+      _isSelected(productId, variantId) {
+        if (_.isArray(variantId)) {
+          return !_.isEmpty(_.filter(this.selectedProducts, function(selectedProduct) {
+            return -1 !== _.findIndex(variantId, {id: selectedProduct.variantId})
+          }))
+        }
+        
+        return -1 !== _.findIndex(this.selectedProducts, {productId, variantId})
+      },
+      _getCartItems() {
+        var currentKit = this.currentKit.toString()
+        return new Promise(function(resolve, reject) {
+          jQuery.get('/cart.js')
+            .done(function(data) {
+              var cartItems = []
+              _.forEach(_.get(JSON.parse(data), 'items', []), function(cartItem, index) {
+                if (_.get(cartItem, 'properties.Kit') === currentKit) {
+                  cartItems.push(Object.assign({}, cartItem, {line: index + 1}))
+                }
+              })
+              resolve(cartItems)
+            })
+            .fail(function() {
+              reject()
+            })
+        })
+      },
+      _addCartItems() {
+        var items = _.reverse(_.sortBy(this.selectedProducts, 'step'))
+        return new Promise(function(resolve, reject) {
+          var addItems = function() {
+            if (items.length) {
+              var item = items.shift()
+              jQuery.post('/cart/add.js', {
+                id: item.variantId,
+                quantity: 1,
+                properties: {
+                  'Kit': item.kit,
+                  'Step': item.step
+                }
+              })
+              .done(function(data) {
+                addItems()
+              })
+              .fail(function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR, textStatus, errorThrown)
+                reject()
+              })
+            } else {
+              resolve()
+            }
+          }
+          
+          addItems()
+        })
+      },
+      _removeCartItems() {
+        var $vm = this
+        return new Promise(function(resolve, reject) {
+          var removeItems = function() {
+            $vm._getCartItems().then(function(items) {
+              if (items.length) {
+                jQuery.post('/cart/change.js', {
+                  line: items[0].line,
+                  quantity: 0
+                })
+                .done(function(data) {
+                  removeItems()
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                  console.log(jqXHR, textStatus, errorThrown)
+                  reject()
+                })
+              } else {
+                resolve()
+              }
+            })
+          }
+
+          removeItems()
+        })
+      },
+      _addToCart() {
+        var $vm = this
+        
+        $vm.loading = true
+        
+        $vm._removeCartItems().then(function() {
+          $vm._addCartItems().then(function() {
+            $vm._redirectToCart()
+          })
+        })
+      },
+      _redirectToCart() {
+        document.location = '/cart'
+      }
+    },
+    created() {
+      this._getProducts(products)
+    },
+    mounted() {
+      var $vm = this
+      
+      // edit kit items
+      if ($vm.$route.params.action == 'edit') {
+        $vm.loading = true
+        $vm._getCartItems().then(function(cartItems) {
+          if (cartItems.length) {
+            _.forEach(cartItems, function(cartItem) {
+              $vm.selectedProducts.push({
+                productId: cartItem.product_id,
+                variantId: cartItem.variant_id,
+                kit: parseInt(cartItem.properties.Kit),
+                step: parseInt(cartItem.properties.Step)
+              })
+            })
+            $vm.loading = false
+          } else {
+            $vm._redirectToCart()
+          }
+        })
+
+        return
+      }
+      
+      // remove kit items
+      if ($vm.$route.params.action == 'remove') {
+        $vm.loading = true
+        $vm._removeCartItems().then(function() {
+          $vm._redirectToCart()
+        })
+        
+        return
+      }
+      
+      // add kit items
+      $vm.$router.push({params: {step: 1}})
+    }
+  }).$mount('#customize-your-kit')
+  {% endraw %}
+</script>
+
+{% schema %}
+  {
+    "name": "Customize Your Kit",
+    "class": "ap-customize-your-kit-section",
+    "blocks": [
+      {
+        "type": "product",
+        "name": "Product",
+        "settings": [
+          {
+            "type": "select",
+            "id": "kit_id",
+            "label": "Select Kit",
+            "options": [
+              {
+                "value": "1",
+                "label": "Kit 1"
+              },
+              {
+                "value": "2",
+                "label": "Kit 2"
+              },
+              {
+                "value": "3",
+                "label": "Kit 3"
+              },
+              {
+                "value": "4",
+                "label": "Kit 4"
+              },
+              {
+                "value": "5",
+                "label": "Kit 5"
+              },
+              {
+                "value": "6",
+                "label": "Kit 6"
+              },
+              {
+                "value": "7",
+                "label": "Kit 7"
+              },
+              {
+                "value": "8",
+                "label": "Kit 8"
+              },
+              {
+                "value": "9",
+                "label": "Kit 9"
+              },
+              {
+                "value": "10",
+                "label": "Kit 10"
+              }
+            ],
+            "default": "1"
+          },
+          {
+            "type": "select",
+            "id": "step_id",
+            "label": "Select Step",
+            "options": [
+              {
+                "value": "1",
+                "label": "Step 1"
+              },
+              {
+                "value": "2",
+                "label": "Step 2"
+              },
+              {
+                "value": "3",
+                "label": "Step 3"
+              },
+              {
+                "value": "4",
+                "label": "Step 4"
+              }
+            ],
+            "default": "1"
+          },
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "header",
+        "content": "Styles"
+      },
+      {
+        "type": "color",
+        "id": "header_background_color",
+        "label": "Header Background Color",
+        "default": "#dedfe1"
+      },
+      {
+        "type": "color",
+        "id": "header_text_color",
+        "label": "Header Text Color",
+        "default": "#000000"
+      }
+    ]
+  }
+{% endschema %}

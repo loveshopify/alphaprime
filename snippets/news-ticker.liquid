@@ -1,0 +1,95 @@
+{% if section.settings.header_ticker %}
+<style>
+  .newsTickerWrap {
+    height: 30px;
+    background-color: #fff;
+    border-top: solid 1px #e2e2e2;
+    border-bottom: solid 1px #e2e2e2;
+    outline: none;
+    overflow: hidden;
+  }
+  .newsTicker {
+    margin-bottom: 0;
+    text-align: center;
+  }
+  .newsTicker p {
+    margin: 0;
+    line-height: 30px;
+    font-size: 11px;
+    font-weight: lighter;
+  }
+  .newsTicker .slick-prev::before,
+  .newsTicker .slick-next::before {
+    display: none;
+  }
+  .newsTicker .slick-arrow {
+    background-image: url({{ 'ticker_arrows.png' | asset_url }});
+    background-repeat: no-repeat;
+    background-position: left center;
+    width: 25px;
+    height: 30px;
+    margin-top: -15px;
+    top: 50%;
+    min-height: auto;
+  }
+  .newsTicker .slick-next {
+    background-position: right center;
+  }
+  .newsTicker .slick-arrow:hover {
+    border: 0px;
+  }
+  .newsTicker .slick-arrow:active {
+    box-shadow: none;
+  }
+  .mobile_nav-fixed--true #pagecontent,
+  .mobile_nav-fixed--false #pagecontent {
+    padding-bottom: 70px;
+  }
+  @media all and (min-width: 768px) {
+    .newsTickerWrap {
+      height: 40px;
+    }
+    .newsTicker {
+      width: 650px;
+      margin: 0 auto;
+      outline: none;
+    }
+    .newsTicker p {
+      line-height: 40px;
+      font-size: 14px;
+    }
+  }
+</style>
+<div class="newsTickerWrap">
+  <div id="{{ id | default: 'newsTicker' }}" class="newsTicker">
+    {% if section.settings.ticker_1 != "" %}
+    <div>{{ section.settings.ticker_1 }}</div>
+    {% endif %}
+    {% if section.settings.ticker_2 != "" %}
+    <div>{{ section.settings.ticker_2 }}</div>
+    {% endif %}
+    {% if section.settings.ticker_3 != "" %}
+    <div>{{ section.settings.ticker_3 }}</div>
+    {% endif %}
+    {% if section.settings.ticker_4 != "" %}
+    <div>{{ section.settings.ticker_4 }}</div>
+    {% endif %}
+    {% if section.settings.ticker_5 != "" %}
+    <div>{{ section.settings.ticker_5 }}</div>
+    {% endif %}
+  </div>
+</div>
+<script>
+  jQuery(document).ready(function($) {
+    $('#{{ id | default: 'newsTicker' }}').slick({
+      dots: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+      variableWidth: false,
+      autoplay: {{ section.settings.header_ticker_autoplay | default: false}},
+      autoplaySpeed: {{ section.settings.header_ticker_autoplay_speed | default: 5000 }}
+    });
+  });
+</script>
+{% endif %}

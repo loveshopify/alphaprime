@@ -1,0 +1,126 @@
+{%- comment -%}
+This template has been created automatically by one of the Maestrooo's application (for instance: SuperFields...).
+
+We use those templates to provide additional features to our apps, and you SHOULD NOT delete this template if you
+are still using our apps. Otherwise, the apps may not work as expected.
+{%- endcomment -%}
+
+{%- layout none -%}
+
+{%- capture jsonp_callback -%}callback_maestrooo_products_{{ search.terms | md5 }}{%- endcapture -%}
+
+{%- if search.terms contains 'handle:' or search.terms contains 'id:' -%}
+  {%- if search.terms contains 'handle:' -%}
+    {%- assign product_handle = search.terms | split: 'handle:' | last -%}
+    {%- assign product = all_products[product_handle] -%}
+  {%- else -%}
+    {%- assign product = search.results.first -%}
+  {%- endif -%}
+
+  {%- if product.handle != blank -%}
+    {{ jsonp_callback }}({
+      {%- capture product_images -%}
+        {%- for image in product.images -%}
+          {
+            "id": {{ image.id }},
+            "object": "product_image",
+            "src": {{ image.src | json }},
+            "position": {{ image.position }}
+          }{%- unless forloop.last %},{% endunless -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      
+      {%- capture product_variants -%}
+        {%- for variant in product.variants -%}
+          {
+            "id": {{ variant.id }},
+            "object": "variant",
+            "title": {{ variant.title | json }},
+            "url": {{ shop.secure_url | append: variant.url | json }},
+            "image": {{ variant.image.src | json }},
+            "price": {{ variant.price }},
+            "available": {% if variant.available %}true{% else %}false{% endif %}
+          }{%- unless forloop.last %},{% endunless -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      
+      "id": {{ product.id }},
+      "object": "product",
+      "title": {{ product.title | json }},
+      "url": {{ shop.secure_url | append: product.url | json }},
+      "handle": {{ product.handle | json }},
+      "images": [{{ product_images }}],
+      "featured_image": {{ product.featured_image.src | json }},
+      "available": {% if product.available %}true{% else %}false{% endif %},
+      "variants": [{{ product_variants }}],
+      "price_min": {{ product.price_min }},
+      "price_max": {{ product.price_max }},
+      "type": {{ product.type | json }},
+      "vendor": {{ product.vendor | json }},
+      "tags": {{ product.tags | json }},
+      "template_suffix": {{ product.template_suffix | json }},
+    })
+  {%- else -%}
+    {{ jsonp_callback }}({})
+  {%- endif -%}
+{%- else -%}
+  {%- paginate search.results by 50 -%}
+    {%- capture products -%}
+      [
+        {%- for product in search.results -%}
+          {%- capture product_images -%}
+            {%- for image in product.images -%}
+              {
+                "id": {{ image.id }},
+                "object": "product_image",
+                "src": {{ image.src | json }},
+                "position": {{ image.position }}
+              }{%- unless forloop.last %},{% endunless -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          
+          {%- capture product_variants -%}
+            {%- for variant in product.variants -%}
+              {
+                "id": {{ variant.id }},
+                "object": "variant",
+                "title": {{ variant.title | json }},
+                "url": {{ shop.secure_url | append: variant.url | json }},
+                "image": {{ variant.image.src | json }},
+                "price": {{ variant.price }},
+                "available": {% if variant.available %}true{% else %}false{% endif %}
+              }{%- unless forloop.last %},{% endunless -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          
+          {
+            "id": {{ product.id }},
+            "object": "product",
+            "title": {{ product.title | json }},
+            "url": {{ shop.secure_url | append: product.url | json }},
+            "handle": {{ product.handle | json }},
+            "images": [{{ product_images }}],
+            "featured_image": {{ product.featured_image.src | json }},
+            "available": {% if product.available %}true{% else %}false{% endif %},
+            "variants": [{{ product_variants }}],
+            "price_min": {{ product.price_min }},
+            "price_max": {{ product.price_max }},
+            "type": {{ product.type | json }},
+            "vendor": {{ product.vendor | json }},
+            "tags": {{ product.tags | json }},
+            "template_suffix": {{ product.template_suffix | json }},
+          }{%- unless forloop.last %},{% endunless -%}
+        {%- endfor -%}
+      ]
+    {%- endcapture -%}
+
+    {{ jsonp_callback }}({
+      "object": "list",
+      "data": {{ products }},
+      "meta": {
+        "total_count": {{ paginate.items }},
+        "has_more": {% if paginate.next %}true{% else %}false{% endif %}
+      }
+    })
+  {%- endpaginate -%}
+{%- endif -%}

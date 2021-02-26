@@ -1,0 +1,112 @@
+{%- capture product_images_json -%}
+  {%- for image in product.images -%}
+    {%- assign modelSize = false -%}
+    {%- if image.alt contains 'size' -%}
+      {%- assign modelSize = image.alt | strip | split: 'size' | last | downcase -%}
+    {%- endif -%}
+    {
+      id: {{ image.id }},
+      alt: '{{ image.alt }}',
+      color: '{{ image.alt | strip | split: ',' | first | downcase }}',
+      modelSize: {%- if modelSize != false -%}'{{ modelSize }}'{%- else -%}false{%- endif -%},
+      sizes: {
+        100: '{{ image | product_img_url: '100x' | split: '?' | first }}',
+        200: '{{ image | product_img_url: '200x' | split: '?' | first }}',
+        400: '{{ image | product_img_url: '400x' | split: '?' | first }}',
+        600: '{{ image | product_img_url: '600x' | split: '?' | first }}',
+        800: '{{ image | product_img_url: '800x' | split: '?' | first }}',
+        1200: '{{ image | product_img_url: '1200x' | split: '?' | first }}',
+        2000: '{{ image | product_img_url: '2000x' | split: '?' | first }}',
+      },
+      width: {{ image.width }},
+      height: {{ image.height }}
+    }{%- if forloop.last == false %},{% endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{% capture new_line %}
+{% endcapture %}
+
+
+  {% assign _products = '' %}
+  {% for tag in product.tags %}
+    {% if tag contains 'completelook' %}
+      {% assign _product_handle = tag | remove: 'completelook_' %}
+      {% assign _products = _products | append: ',' | append: _product_handle %}
+    {% endif %}
+  {% endfor %}
+
+
+<script>
+  var productImages = [{{ product_images_json | split: new_line | join: '' }}];
+</script>
+<div class="gallery-wrap js-product-page-gallery clearfix
+  gallery-arrows--{{section.settings.gallery_arrows}}
+  {% if section.settings.product_thumbs %} {{ section.settings.thumbnail_position }} {% endif %}
+  slideshow_animation--{{ section.settings.slideshow_animation }}
+  " style="background-color: #f3f2f2de;">
+  <div class="row" style="background-color:#f5f5f5; position: relative">
+    <div class="four-fifth column" style="float:left; position: relative; position: relative;padding-left: 0px;padding-right: 0px;">
+      <div class="three-fourths column main_img_wrap" style="float: right; padding: 0px;">
+        <div class="div_sp" style="position: absolute; z-index: 100;">
+              {% assign collection_handles = product.collections | map: 'handle' %}
+              {% assign variant = product.selected_or_first_available_variant %}
+
+              {% if product.available %}
+                {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
+                  <div class="sale_banner_product">{{ 'collections.general.sale' | t }}</div>
+                {% endif %}
+              {% endif %}
+              {% if collection_handles contains 'new' %}
+                <div class="new_banner_product" style="display: none">{{ 'collections.general.new' | t }}</div>
+              {% endif %}
+
+              {% assign pre_order_swatches = product.metafields.sf_product.pre_order_swatches | downcase | split: ',' %}
+              {% if collection_handles contains 'pre-order' or pre_order_swatches != empty %}
+                <div class="preorder_banner_product" style="display: none">{{ 'collections.general.pre_order' | t }}</div>
+              {% endif %}
+          </div>
+        <div class="div_sp" style="position: absolute; z-index:100; right: 0;">
+          <button type="button" name="zoom" class="product-zoom-button" style="display: none;">
+            <span class="icon-search"></span>
+          </button>
+        </div>
+        <div class="product_gallery product-{{ product.id }}-gallery
+                    {% if product.images.size > 1 %} multi-image {% endif %}
+                    {% if product.images.size <= 1 %} single-image {% endif %}
+                    {% if settings.slideshow_button_style != true %}light-button{% endif %}"
+             data-zoom="{{ section.settings.activate_zoom }}"
+             data-autoplay="{{ section.settings.activate_autoplay }}"
+             data-lightbox="{%- if template != 'index' and section.settings.enable_product_lightbox -%}true{%- else -%}false{%- endif -%}"
+             style="margin-bottom: 0;"></div>
+        <div class="product_gallery_nav_parent pnavp one-fifth column thumbnail_wrap" data-images="{{product.images.size}}">
+          {% if section.settings.product_thumbs and product.images.size > 1 and image_width != 'full' %}
+        	<div class="product_gallery_nav pnav1 product-{{ product.id }}-gallery-nav"></div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="product_gallery_nav_parent pnavp one-fourth column thumbnail_wrap" data-images="{{product.images.size}}">
+        {% if section.settings.product_thumbs and product.images.size > 1 and image_width != 'full' %}
+          <div class="product_gallery_nav pnav product-{{ product.id }}-gallery-nav"></div>
+        {% endif %}
+      </div>
+    </div>
+	<div class="one-fifth column hidden-small thumbnail_wrap product-list product-list-bottom div_pc" style="float: right;">
+        {% if _products != '' %}
+          {% assign _products = _products | remove_first: ',' | split: ',' %}
+        <div>
+          <div style="font-size:12px">COMPLETE THE LOOK</div>
+          {% for _product_handle in _products %}
+              {% assign _product = all_products[_product_handle] %}
+              {% include 'product-thumbnail-products', product: _product, products_per_row: 5, sidebar: false, hide_sizes: true %}
+          {% endfor %}
+        </div>
+        {% else %}
+        {% endif %}
+      </div>    
+  </div>
+</div>
+
+<script>
+  $(".product-zoom-button").click(function() {
+  });
+</script>

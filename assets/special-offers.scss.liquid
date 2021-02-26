@@ -1,0 +1,484 @@
+{% assign promo_color = "#f45b4f" %}
+
+.saso-notification {
+  z-index: 2147483647;  
+  display: none;
+  left: 0px;
+  width: 100%;
+  margin: 0px;
+  padding: 16px 0px;
+  font-size: 16px;
+  text-align: center;
+  text-transform: none;
+  
+  p {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  a {
+    font-weight: bold;
+  }
+
+}
+
+.saso-notification-x {
+  font-weight: bold;
+  float:right;
+  height: 0;
+  overflow: visible;
+  margin-right: 2em;
+  cursor: pointer; 
+  /*position: absolute;*/
+  
+  a {
+  	text-decoration: none;
+  }
+}
+
+.saso-price {
+  color: {{promo_color}};
+  font-weight: bold;
+  display: inline !important;
+}
+
+
+
+.saso-volumes, .saso-bundle {
+  margin-top: 10px;
+  clear: both;
+}
+
+.saso-volume-discount-tiers .saso-table {
+  margin-top: 6px;
+  border-collapse: collapse;
+  /*text-align: center;*/
+  
+  thead {
+  }  
+  
+  tbody {
+    tr:nth-child(even) {
+      background: #f8f8f8;
+      color: #000000;
+    }
+    tr:nth-child(odd) {
+      background: #ececec;
+      color: #000000;
+    }
+    
+    .saso-add-to-cart {
+      font-weight: bold;
+    }
+  }
+  
+  th, td {
+  	border: 1px solid #e6e6e6;
+    padding: 4px;
+  }
+  
+}
+
+
+.saso-cross-sell-popup {
+  position: relative;
+  background: #ffffff;
+  color: #000000;
+  padding: 20px;
+  width: auto;
+  min-width: 250px;
+  margin: 20px auto;
+  text-align: center;
+  text-transform: none;
+  clear: both; /* some product pages have floats, required when embedded */
+
+  .saso-message {
+    font-size: 16px;
+  }
+  
+  .saso-products-container {
+    display: block;
+	overflow: auto;
+  }
+  
+  table {
+    table-layout: fixed;
+    width: auto;
+    min-width: 180px;
+    margin: auto;
+    border: 0 !important;
+  }
+  tr {
+    border-top: 1px solid #DCDCDC;
+    /*border-bottom: 1px solid #DCDCDC;*/
+  }
+  tr:first-child th:after, tr:first-child td:after {
+    border-bottom: 0 !important;
+  }
+  
+  td {
+    text-align: center !important;
+    border: 0 !important;
+    padding: 8px !important; /* some themes have padding first-child 0px */
+    display: table-cell !important;
+  }
+
+  .saso-product-container {
+    width: 180px;
+    vertical-align: top;
+  }
+    
+  .saso-image {
+    width: 180px;
+    height: 180px;
+    line-height: 180px;
+    margin: auto;
+    text-align: center;
+    display: block;
+    overflow: hidden;
+  }
+  .saso-image img {
+    width: auto;
+    height: auto;
+    max-width: 180px;
+    max-height: 180px;
+    vertical-align: middle;
+    margin: 0 auto;
+    display: inline-block;
+  }
+  
+  .saso-title {
+    margin: 4px 0px 0px 0px;
+    height: 3em;
+    text-align: center;
+    overflow: hidden;
+    /*font-weight: bold;*/
+    /*line-height: 1.4em;*/
+    /*font-size: 14px;*/
+    /* text-overflow: ellipsis; */
+    /* white-space: nowrap; */
+  }
+  
+  .saso-variants-container {
+    min-height: 24px; /* don't use height, will overlap with next row */
+    margin: 4px 0px;
+  }
+  .saso-variants {
+    width: 100%;
+    padding-right: 0px !important;
+    padding: 2px 2px 2px 10px;
+    font-size: 14px;
+   	/*
+  	background: transparent url(https://cdn.shopify.com/s/files/1/0653/0119/t/1/assets/select.png) no-repeat right;
+  	*/
+  }
+
+  .saso-price {
+  }
+  .saso-was-price {
+    text-decoration: line-through;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+  .saso-was-price:empty {
+    display:none;
+  }
+  
+  .saso-add-to-cart, button.saso-click-here {
+    background: {{promo_color}};
+    color: #fff;
+    height: 36px;
+    line-height: 36px;
+    border: none;
+    margin: 6px 0px 0px 0px;
+    padding: 0 20px !important;
+    font-weight: 700;
+    float: none !important;
+  }
+  button.saso-click-here {
+    width: auto;
+  }
+  
+  
+  a.saso-click-here {
+    /*display: block;
+    margin-top: 10px;
+    text-align: center;*/
+    color: #ffffff;
+  }
+  a.saso-click-here:hover {
+    opacity: 0.9;
+  }
+  
+/*  .saso-click-here-h {
+    text-align: center;
+  }
+*/
+  a.saso-close {
+    float: none !important;
+    display: block;
+    margin: 10px 0 0 0;
+  }
+
+}
+
+
+.saso-cross-sell-popup0 {
+  padding: 60px;
+}
+
+
+.saso-bundle-popup {
+  background: #f4f4f4;
+  padding: 2px;
+  
+  .saso-message {
+  	color: {{promo_color}}    
+  }
+
+  .saso-product-container {
+    width: 160px;
+    display: inline-block;
+  }
+  
+  .saso-image {
+    width: 160px;
+    height: 160px;
+    line-height: 160px;
+    position: relative;
+  }
+  .saso-image img {
+    max-width: 160px;
+    max-height: 160px;
+  }
+  
+  .saso-product-container .saso-price {
+    text-decoration: line-through;
+  }
+  
+  .saso-quantity-container, .saso-plus-container, .saso-equal-container {
+    color: {{promo_color}};
+    font-weight: bold;
+	font-size: 60px;
+  	display: inline-block;
+  }
+  .saso-quantity-container {
+	font-size: 30px;
+    vertical-align: top;
+    position: absolute;
+    top: -60px;
+    left: 0px;
+    z-index: 100;
+  }    
+  .saso-plus-container {
+    vertical-align: top;
+    padding-top: 35px;
+    width: 10px;
+  }
+  .saso-plus-container-inner {
+    position: relative;
+    margin-left: -14px;
+    z-index: 100;
+  }
+  .saso-plus-container:last-child {
+    display: none !important;
+  }
+  
+  .saso-bundle-row {
+    border-top: 0px solid #DCDCDC;
+    td {
+      padding: 0px 10px !important;
+    }
+  }
+  
+  .saso-bundle-price-container {
+	font-size: 36px;
+    padding: 0px 0px 0px 10px !important;
+  }
+  
+  .saso-bundle-success {
+    display: none;
+  }
+}
+
+
+.saso-cart-item-discount-notes, .saso-cart-item-upsell-notes {  	
+  display: block;  
+  color: #d54f4c;
+  a {
+    color: #d54f4c;
+  }
+}
+
+.saso-cart-item-upsell-notes {  	
+  font-weight: bold;
+}
+
+.saso-cart-item-price, .saso-cart-item-line-price {
+
+  .original_price {
+    display: block;
+    text-decoration: line-through;
+  }
+  .discounted_price {
+    display: block;
+    font-weight: bold;
+  }
+
+}
+
+.saso-cart-total {
+  display: block;
+  font-weight: bold;
+  /*text-align: right;*/
+}
+
+.saso-summary {
+/*
+  text-align: right;
+  font-weight: bold;
+  */
+  font-size: 14px;
+}
+
+.saso-cart-offers {
+  
+  .saso-hide-when-embedded {
+  	display: none;
+  }
+  
+  .saso-cross-sell-popup {
+    padding: 5px; /* embedded */
+    margin: 0px;
+  }
+  
+  .title {
+    padding: 0px !important;
+    height: auto;
+  }
+
+  /*
+  .select-options  {
+  	display: none;
+  }
+  
+  .image {
+    height: auto;
+  }
+  */
+}
+
+
+.saso-use-discount-code-cart-container {
+  margin: 4px 0 4px 0;
+
+  input {
+    display: inline !important;
+    width: auto;
+    max-width: 16em;      
+  }
+  button {
+    margin: 0px 0px;
+  }
+  
+}
+
+.saso-use-discount-code-cart-container::after {
+  margin-top: 3px;
+  background-color: rgba(175,175,175,0.34);
+  content: '';
+  display: block;
+  height: 1px;
+  transition: background-color 0.3s cubic-bezier(0.3, 0, 0, 1);
+  width: 100%;
+  z-index: 4;
+}
+
+.saso-use-discount-code-cart-code {
+  display: inline !important; 
+  max-width: 10em !important;
+}
+
+.saso-use-discount-instead-container {
+}
+
+
+
+/* mobile */
+@media (max-width: 960px) {
+
+  .saso-notification {
+    font-size: 14px;
+  }
+  .saso-notification-x {
+    margin: -16px 4px 0px 0px;
+    font-size: 16px;
+  }
+
+  
+  .saso-cross-sell-popup {
+    min-width: 260px;    
+  
+    .saso-message {
+      font-size: 14px;
+    }
+
+    .saso-title {
+      font-size: 16px;
+    }
+
+    .saso-image {
+      width: 120px;
+      height: 120px;
+      line-height: 120px;
+    }
+    .saso-image img {
+      max-width: 120px;
+      max-height: 120px;
+    }
+
+  }
+ 
+  .saso-bundle-popup {
+    .saso-product-container {
+      width: 120px;
+    }
+    .saso-bundle-price-container {
+	  font-size: 24px;
+    }
+    .saso-quantity-container, .saso-plus-container, .saso-equal-container {
+      font-size: 24px;
+    }
+  }
+  
+  ::-webkit-scrollbar {
+      -webkit-appearance: none;
+  }
+
+  ::-webkit-scrollbar:vertical {
+      width: 24px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+      height: 24px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, .5);
+      border-radius: 10px;
+      border: 2px solid #ffffff;
+  }
+
+  ::-webkit-scrollbar-track {
+      border-radius: 10px;  
+      background-color: #ffffff; 
+  }
+  
+  
+}
+
+
+
+.amazon-payments-pay-button:hover {
+    cursor: pointer;
+}

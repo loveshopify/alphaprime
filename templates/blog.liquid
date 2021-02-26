@@ -1,0 +1,16 @@
+{% comment %}
+  The contents of the blog.liquid template can be found in /sections/blog-template.liquid
+{% endcomment %}
+
+{% section 'blog-template' %}
+{% if article.image.src != blank %}
+    <div class="image">
+      <img  class="img-responsive replace-2x" src="{{ article.image.src | img_url: '1024x1024' }}" alt="{{ article.image.alt }}">
+    </div>
+  {% endif %}
+  {% if article.content contains '<img' %}                               
+    {% assign content_blog_home = article.content %}
+    <div class="image">
+      <img src="{% include 'blog-src-image' width article.content %}" title="{{ article.title }}" class="img-responsive replace-2x" alt="{{ article.title }}" />
+    </div>
+  {% endif %}

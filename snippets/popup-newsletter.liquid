@@ -1,0 +1,112 @@
+<style>
+  #subscribe-remodal {
+    max-width: 690px;
+    padding: 0;
+    margin-bottom: 0;
+    background: none;
+  }
+  #subscribe-remodal .subscribe-content-wrap {
+    display: inline-block;
+    max-width: 100%;
+  }
+  #subscribe-remodal .subscribe-content {
+    position: relative;
+    width: 650px;
+    height: 650px;
+    margin: 20px;
+    background-color: white;
+    border-radius: 100%;
+    border: 20px solid black;
+  }
+  #subscribe-remodal .subscribe-content > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  #subscribe-remodal .subscribe-content img {
+    margin-bottom: 30px;
+  }
+  #subscribe-remodal .subscribe-content h3 {
+    margin: 0 0 20px;
+    font-size: 30px;
+  }
+  #subscribe-remodal .subscribe-content .subscribe-form {
+    margin: 25px 0;
+  }
+  #subscribe-remodal .subscribe-content .subscribe-form form {
+    margin-bottom: 0;
+  }
+
+  #subscribe-remodal .subscribe-content .subscribe-form input[type="text"]::-webkit-input-placeholder,
+  #subscribe-remodal .subscribe-content .subscribe-form input[type="email"]::-webkit-input-placeholder {
+    color: #dd4246;
+  }
+  #subscribe-remodal .subscribe-content .subscribe-form input[type="submit"] {
+    height: 55px;
+    margin-left: 0;
+    font-size: 15px;
+    color: white;
+    background: black;
+    border: 1px solid black;
+  }
+  #subscribe-remodal .remodal-close:before {
+    font-size: 50px;
+  }
+  @media all and (max-width: 650px) {
+    #subscribe-remodal .subscribe-content {
+      margin: 0;
+      width: 100%;
+      height: auto;
+      padding: 10px;
+      border-radius: 0;
+      border: 0;
+    }
+    #subscribe-remodal .subscribe-content:after {
+      display: none;
+    }
+    #subscribe-remodal .subscribe-content img {
+      max-width: 60%;
+      margin-bottom: 15px;
+    }
+    #subscribe-remodal .subscribe-content h3 {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    #subscribe-remodal .subscribe-content .subscribe-form {
+      margin: 15px 0;
+    }
+    #subscribe-remodal .subscribe-content .subscribe-form input[type="email"] {
+      max-width: 100%;
+      text-align: center;
+    }
+  }
+  .popup-disclaimer {
+    max-width: 350px;
+    line-height: 2.2em;
+    font-size: 9px;
+    color: #7d7d7d;
+  }
+    
+</style>
+<div id="subscribe-remodal" class="remodal" data-remodal-id="newsletter">
+  <a data-remodal-action="close" class="remodal-close"></a>
+  <div class="subscribe-content-wrap">
+    <div class="subscribe-content">
+      <div>
+        <img src="{{ 'ap-logo-black.png' | asset_img_url: 'original' }}" alt="{{ shop.name | escape }}" />
+        <h3>GET PRIMED UP<br/> & ENJOY <b>15% OFF</b> YOUR ORDER</h3>
+        {% include 'subscribe-form' %}
+        <p class="popup-disclaimer">BY ENTERING YOUR EMAIL YOU ARE SUBSCRIBING TO RECEIVE EMAILS FROM ALPHA PRIME. OFFER IS VALID ON FULL PRICED FIRST PURCHASE ONLY AND IS NOT VALID ON SALE ITEMS OR GIFTS CARDS. OFFER IS NOT TRANSFERABLE, NOT RETROACTIV, AND NON-REFUNDABLE.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  jQuery(document).ready(function($) {
+    $(window).on('subscribeForm:submit', function(event, form) {
+      $('.remodal-close:visible').trigger('click')
+    })
+  })
+</script>

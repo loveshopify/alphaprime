@@ -1,0 +1,30 @@
+{% comment %}
+  The contents of the collection.liquid template can be found in /sections/collection-template.liquid
+{% endcomment %}
+
+{% section 'collection-template' %}
+
+{% capture gif_images %}
+{{ 'gift-shop-product-gif-1.gif' | asset_img_url: 'original' | split: '?' | first }},
+{{ 'gift-shop-product-gif-2.gif' | asset_img_url: 'original' | split: '?' | first }},
+{{ 'gift-shop-product-gif-3.gif' | asset_img_url: 'original' | split: '?' | first }},
+{{ 'gift-shop-product-gif-4.gif' | asset_img_url: 'original' | split: '?' | first }},
+{{ 'gift-shop-product-gif-5.gif' | asset_img_url: 'original' | split: '?' | first }}
+{% endcapture %}
+<script>
+  jQuery(document).ready(function($) {
+    var productGifImages = ["{{ gif_images | strip_newlines | split: ',' | join: '","' }}"]
+    var productList = $('.product-list')
+    
+    $.each(productList.find('> div'), function(index) {
+      var $product = $(this)
+      
+      if (productGifImages.length && (index == 1 || index == 4 || index == 11 || index == 14 || index == 21)) {
+        $product.after('<div class="' + $product.attr('class') + '">'
+        + '<img src="' + productGifImages[0] + '" alt=""/>'
+        + '</div>')
+        productGifImages.shift()
+      }
+    })
+  })
+</script>

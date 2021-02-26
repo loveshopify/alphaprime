@@ -1,0 +1,143 @@
+{% comment %}
+  Choose Your Kit section
+{% endcomment %}
+
+<style>
+.ap-banner-section + .ap-choose-your-kit-section {
+  margin-top: 60px;
+}
+#choose-your-kit {
+  text-align: center;
+}
+#choose-your-kit .ap-kit {
+  margin-bottom: 20px;
+}
+#choose-your-kit .ap-kit a {
+  display: inline-block;
+}
+#choose-your-kit .ap-kit a:hover {
+  opacity: 0.8;
+}
+#choose-your-kit .ap-kit img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+}
+</style>
+
+{% capture women_kits %}
+  {% for block in section.blocks %}
+    {% if block.type == 'kit' and block.settings.kit_gender == 'women' %}
+    <div class="ap-kit ap-kit-women">
+      <a href="{{ pages['customize-your-kit'].url }}#/add/kit/{{ block.settings.kit_id }}/step/1"><img src="{{ block.settings.kit_banner | img_url: 'original' }}" alt="{{ block.settings.kit_banner.alt | escape }}"/></a>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% capture men_kits %}
+  {% for block in section.blocks %}
+    {% if block.type == 'kit' and block.settings.kit_gender == 'men' %}
+    <div class="ap-kit ap-kit-men">
+      <a href="{{ pages['customize-your-kit'].url }}#/add/kit/{{ block.settings.kit_id }}/step/1"><img src="{{ block.settings.kit_banner | img_url: 'original' }}" alt="{{ block.settings.kit_banner.alt | escape }}"/></a>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+<div id="choose-your-kit">
+  <h1>Choose Your Kit</h1>
+  <div class="eight columns">
+    <h4>Women</h4>
+    {{ women_kits }}
+  </div>
+  <div class="eight columns">
+    <h4>Men</h4>
+    {{ men_kits }}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Choose Your Kit",
+    "class": "ap-choose-your-kit-section",
+    "blocks": [
+      {
+        "type": "kit",
+        "name": "Kit",
+        "settings": [
+          {
+            "type": "select",
+            "id": "kit_id",
+            "label": "Select Kit",
+            "options": [
+              {
+                "value": "1",
+                "label": "Kit 1"
+              },
+              {
+                "value": "2",
+                "label": "Kit 2"
+              },
+              {
+                "value": "3",
+                "label": "Kit 3"
+              },
+              {
+                "value": "4",
+                "label": "Kit 4"
+              },
+              {
+                "value": "5",
+                "label": "Kit 5"
+              },
+              {
+                "value": "6",
+                "label": "Kit 6"
+              },
+              {
+                "value": "7",
+                "label": "Kit 7"
+              },
+              {
+                "value": "8",
+                "label": "Kit 8"
+              },
+              {
+                "value": "9",
+                "label": "Kit 9"
+              },
+              {
+                "value": "10",
+                "label": "Kit 10"
+              }
+            ],
+            "default": "1"
+          },
+          {
+            "type": "select",
+            "id": "kit_gender",
+            "label": "Select Kit Gender",
+            "options": [
+              {
+                "value": "women",
+                "label": "Women"
+              },
+              {
+                "value": "men",
+                "label": "Men"
+              }
+            ],
+            "default": "women"
+          },
+          {
+            "type": "image_picker",
+            "id": "kit_banner",
+            "label": "Kit Banner"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

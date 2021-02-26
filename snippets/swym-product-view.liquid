@@ -1,0 +1,44 @@
+{% comment %}
+<!-- DO NOT EDIT!! - Auto generated file->
+<!-- To add modifications, create a separate file and include in theme.liquid after {% include swymSnippet %}-->
+{% endcomment %}
+{%- if product -%}
+<script class="swym-product-view-snippet">
+['SwymViewProducts', 'SwymWatchProducts', 'SwymProductVariants'].forEach(function(k){
+  if(!window[k]) window[k] = {};
+});
+(function(et){
+    var collections = {{product.type | json}};
+    var o={}, empi={{ product.id | json }},
+    piu = {{ product.featured_image | img_url: '620x620' | json }};
+    {% assign currentVariant = product.variants[0] %}
+    {% for variant in product.variants %}
+    {% if variant.selected %}
+    {% assign currentVariant = variant %}
+    {% endif %}
+    SwymProductVariants[{{variant.id|json}}] = {
+      empi:empi,epi:{{variant.id|json}},
+      du:"{{ shop.url }}{{ product.url }}",
+      dt:{{ product.title | json }},
+      ct: collections,
+      iu: {% if variant.image %} {{ variant | img_url: '620x620' | json }} {% else %} piu {% endif %},
+      stk: {{variant.inventory_quantity}},
+      pr: {{ variant.price }}/100,
+      {% if variant.compare_at_price %} op: {{variant.compare_at_price}}/100, {% endif %}
+      variants: [{ {{ variant.title | json }} : {{variant.id|json}}}]
+    };
+    SwymWatchProducts[{{variant.id | json}}] = o[{{variant.id | json}}] = {"id": {{variant.id | json}}, "available": {{variant.available | json}},"inventory_management": {{variant.inventory_management | json}},"inventory_quantity": {{variant.inventory_quantity | json}},"title": {{variant.title | json}}, "inventory_policy": {{variant.inventory_policy | json}}};
+    {% endfor %}
+    var product_data = {
+      empi:empi, epi:{{ currentVariant.id }},
+      dt	:{{ product.title | json }},du:"{{ shop.url }}{{ product.url }}",
+      ct 	:collections,pr:{{ currentVariant.price }}/100,stk:{{ currentVariant.inventory_quantity }},
+      iu	:{% if currentVariant.image %} {{ currentVariant | img_url: '620x620' | json }} {% else %} piu {% endif %},variants:[{ {{currentVariant.title | json}} : {{currentVariant.id | json}} }]
+      {% if currentVariant.compare_at_price %} ,op:{{currentVariant.compare_at_price}}/100 {% endif %}
+    };
+    SwymViewProducts[{{product.handle | json}}] = SwymViewProducts[{{product.id | json}}] = product_data;
+    SwymWatchProducts[{{product.handle | json}}] = SwymWatchProducts[{{product.id | json}}] = o;
+  })();
+
+</script>
+{%- endif -%}

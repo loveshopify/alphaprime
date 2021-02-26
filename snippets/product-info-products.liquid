@@ -1,0 +1,46 @@
+<div class="product-details" {{ pro_index }} style="text-align: left; padding-left: 4px">
+  
+  {% if pro_index != '' %}
+    {% if template.suffix == 'color-swatch' %}
+        <div class="swatch_options">
+            {% include 'product-collection-swatch' with product.options[pro_index] %}
+        </div>
+  	{% else %}
+  	    <span>{{pro_value}}</span>
+  	{% endif %}
+  {% endif %}
+  <span class="title" itemprop="name" style="margin-top: 5px;"><b>{{ product.title }}</b></span>
+  {% comment %}
+  {% if settings.enable_shopify_collection_badges and settings.enable_shopify_review_comments %}
+    {% include 'okendo-reviews-product-rating-summary' %}
+  {% endif %}
+  {% if settings.display_vendor %}
+    <span itemprop="brand" class="brand">{{ product.vendor }}</span>
+  {% endif %}
+  {% endcomment %}
+  {% if collection_handles contains 'coming-soon' %}
+    <span class="modal_price">{{ 'collections.general.coming_soon' | t }}</span>
+  {% else %}
+    <span class="price {% if product.compare_at_price_max > product.price %}sale{% endif %}">
+      {% if product.available %}
+        {% if product.price_varies and product.price_min > 0 %}
+          <small><em>{{ 'products.general.from' | t }}</em></small>
+        {% endif %}
+          {% if product.price_min > 0 %}
+            <span class="money">{{ product.price_min | money }}</span>
+          {% else %}
+            {{ settings.free_price_text }}
+          {% endif %}
+      {% else %}
+        <span class="sold_out">{{ 'products.product.sold_out' | t }}</span>
+      {% endif %}
+      {% if product.compare_at_price_max > product.price %}
+        <span class="was_price">
+          <span class="money">{{ product.compare_at_price_max | money }}</span>
+        </span>
+      {% endif %}
+    </span>
+  {% endif %}
+</div>
+
+

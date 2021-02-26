@@ -1,0 +1,203 @@
+<style style="text/css">
+#styled-instagram-feed{
+  margin-left: 20px;
+  margin-right: 10px;
+}
+#styled-instagram-feed .fs-has-links::after {
+  padding: 5px 7.5px;
+  border: 1px solid rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+  content: "SHOP THE LOOK";
+}
+#styled-instagram-feed .fs-has-links:hover:after {
+  background-color: rgb(255, 255, 255);
+  color: rgba(0, 0, 0, 0.25);
+}
+#styled-instagram-feed .fs-wrapper {
+  height: auto;
+}
+#styled-instagram-feed .fs-entry-container {
+  /*height: auto !important;*/
+  float: none !important;
+  vertical-align: top;
+}
+#styled-instagram-feed .fs-desktop div.fs-entry-container {
+  width: 25% !important;
+  padding-top: 25% !important;
+}
+#styled-instagram-feed .fs-mobile div.fs-entry-container {
+  width: 50% !important;
+  padding-top: 50% !important;
+}
+#styled-instagram-feed .fs-wrapper div.fs-text-container .fs-entry-title,
+#styled-instagram-feed div.fs-detail-title {
+  font-family: "Times New Roman", serif;
+  font-style: italic;
+  font-weight: normal;
+}
+#styled-instagram-feed div.fs-text-container .fs-entry-date,
+#styled-instagram-feed div.fs-detail-container .fs-post-info,
+#styled-instagram-feed div.fs-wrapper div.fs-has-links::after,
+#styled-instagram-feed .fs-text-product,
+#styled-instagram-feed .fs-overlink-text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+}
+#styled-instagram-feed .fs-wrapper div.fs-text-container * {
+  color: rgb(255, 255, 255);
+}
+#styled-instagram-feed .fs-wrapper div.fs-text-container {
+  background-color: rgba(0, 0, 0, 0.25);
+  margin: 0px;
+}
+#styled-instagram-feed div.fs-entry-date,
+#styled-instagram-feed div.fs-entry-title {
+  display: none;
+}
+#styled-instagram-feed .fs-wrapper div.fs-timeline-entry {
+  margin: 1px;
+}
+  
+  .fs-mobile .fs-entry-container, .fs-desktop .fs-entry-container {
+    padding-top: 0;
+    height: 221px;
+    width: 221px;
+    float: none;
+  }
+
+  #styled-instagram-feed .fs-desktop div.fs-entry-container {
+    width: 100% !important;
+    padding-top: 25% !important;
+  }
+  #styled-instagram-feed .fs-mobile div.fs-entry-container {
+      height: 130px !important;
+      width: 96% !important;
+  }
+  
+  /*mobile*/
+  @media all and (max-width: 480px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 100px;
+    }
+    #styled-instagram-feed .fs-mobile div.fs-entry-container {
+      height: 100px !important;
+      width: 96% !important;
+    }
+  }
+  @media all and (max-width: 767px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 120px;
+    }
+    #styled-instagram-feed .fs-mobile div.fs-entry-container {
+      height: 130px !important;
+      width: 96% !important;
+    }
+  }
+  /*pc*/
+  @media all and (min-width: 768px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 140px;
+    }
+  }
+
+  @media all and (min-width: 1024px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 160px;
+    }
+  }
+
+  @media all and (min-width: 1280px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 180px;
+    }
+  }
+
+  @media all and (min-width: 1392px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 200px;
+    }
+  }
+
+  @media all and (min-width: 1600px) {
+    #styled-instagram-feed .fs-desktop div.fs-entry-container {
+      height: 220px;
+    }
+  }
+
+</style>
+<div id="styled-instagram-feed" style="display: none">
+  <div style="text-align: center;font-size: 14px;margin: 8px 0 12px;"><a href="https://alphaprimeusa.com/pages/shopig" class="icon-instagram">Styled On Instagram</a></div>
+  <script src="//foursixty.com/media/scripts/fs.slider.v2.5.js" data-feed-id="alpha-prime-apparel_1" data-theme="slider_v2_5" data-connector-filter="27537,29391,29392,29393,29394,30696" data-for-url="true"></script>
+  <script type="text/javascript">
+    jQuery(document).ready(function($) {
+      $(window).on('load', function() {
+          $(".fs-has-posts").remove();
+          $(".centered-content.fs-slider-next-button").remove();
+          $(".centered-content.fs-slider-prev-button").remove();
+          $(".centered-content.fs-slider-prev-button").removeClass();
+          var slider = $("#styled-instagram-feed .fs-wrapper");
+
+          slider.removeClass("fs-slider_v2_5-feed");
+          slider.removeClass("fs-timeline");
+          slider.removeClass("fs-wrapper");
+          slider.addClass("slick-slider");
+
+          var sliderParent = $(".fs-slider-container.fs-narrow-timeline");
+          sliderParent.removeClass("fs-narrow-timeline");
+          sliderParent.removeClass("fs-slider-container");
+          sliderParent.removeClass("fs-desktop");
+          sliderParent.removeClass("fs-mobile");
+          sliderParent.removeClass("fs-slider_v2_5");
+          sliderParent.addClass("fs-desktop");
+        
+          onSlickSetup(slider, true);
+        
+        window.addEventListener("orientationchange", function() {
+         onSlickSetup(slider, false);
+        }, false);
+        window.addEventListener("resize", function() {
+           onSlickSetup(slider, true);
+        }, false);
+      });
+    });
+    function onSlickSetup(slider, isResize) {
+      var styledInstagramFeed = $('#styled-instagram-feed');
+      if (styledInstagramFeed.find('.fs-entry-container').length <= 0) {
+        return;
+      }
+
+      if (slider.hasClass('slick-initialized')) {
+        slider.slick('unslick');
+      }
+      var isPC = window.screen.width >= 768;
+      if (!isResize) {
+        isPC = !isPC;
+      }
+      if (isPC) {
+        slider.slick({
+          dots: false,
+          infinite: false,
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          arrows: true,
+          vertical: true,
+          verticalSwiping: true,
+          prevArrow: '<span class="slickarrow icon-up-arrow"></span>',
+          nextArrow: '<span class="slickarrow icon-down-arrow"></span>'
+        });
+      } else {
+        slider.slick({
+          dots: false,
+          infinite: false,
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          arrows: false,
+          vertical: false,
+          verticalSwiping: false,
+        });
+      }
+      styledInstagramFeed.show();
+    }
+  </script>
+</div>

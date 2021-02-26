@@ -1,0 +1,115 @@
+{% assign collection_handles = product.collections | map: 'handle' %}
+{% assign new_releases = product.metafields.sf_product.new_releases | downcase | split: ',' %}
+{% assign pre_order_swatches = product.metafields.sf_product.pre_order_swatches | downcase | split: ',' %}
+
+{% if hidden_swatches == empty %}
+  {% assign hidden_swatches = product.metafields.sf_product.hidden_swatches | downcase | split: ',' %}
+{% endif %}
+
+{% assign show_only_new_releases = false %}
+{% if collection and collection.handle contains 'new' %}
+  {% assign show_only_new_releases = true %}
+{% endif %}
+
+{% assign new_release = false %}
+{% assign new_release_banner = false %}
+{% if collection_handles contains 'new' or new_releases != empty %}
+  {% assign new_release = true %}
+  {% assign new_release_banner = true %}
+{% endif %}
+
+{% assign pre_order = false %}
+{% assign pre_order_banner = false %}
+{% if collection_handles contains 'pre-order' or pre_order_swatches != empty %}
+  {% assign pre_order = true %}
+  {% assign pre_order_banner = true %}
+{% endif %}
+
+{% assign pro_index = '' %}
+{% for op in product.options %}
+  {% assign op_handle = op | downcase %}
+  {% if op_handle contains 'color' or op_handle contains 'colour' %}
+    {% assign pro_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+{% assign variant_url = '' %}
+{% assign variant_image = '' %}
+{% if pro_index != '' %}
+  {% assign pro_values = '' %}
+  {% assign pro_numvalues = '' %}
+  {% assign pro_option_index = pro_index %}
+  {% for product_vari in product.variants %}
+    {% if product_vari.available != true %}
+      {% continue %}
+    {% endif %}
+
+    {% assign pro_value = product_vari.options[pro_index] %}
+    {% assign pro_numvalue = product_vari.options[pro_option_index] %}
+    {% assign color_name = pro_value | downcase %}
+
+    {% assign new_variant_release = false %}
+    {% assign new_release_banner = false %}
+    {% if new_release %}
+      {% for color in new_releases %}
+        {% assign _color_name = color | downcase %}
+        {% if color_name == _color_name %}
+          {% assign new_variant_release = true %}
+          {% assign new_release_banner = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if show_only_new_releases and new_variant_release != true %}
+      {% continue %}
+    {% endif %}
+
+    {% assign pre_order_banner = false %}
+    {% assign hide_sizes = false %}
+    {% if pre_order %}
+      {% for color in pre_order_swatches %}
+        {% assign _color_name = color | downcase %}
+        {% if color_name == _color_name %}
+          {% assign hide_sizes = true %}
+          {% assign pre_order_banner = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% assign skip = false %}
+    {% if hidden_swatches != empty %}
+      {% for color in hidden_swatches %}
+        {% assign _color_name = color | downcase %}
+        {% if color_name == _color_name %}
+          {% assign skip = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    
+    {% if skip %}
+      {% assign skip = false %}
+      {% continue %}
+    {% endif %}
+    
+    {% unless pro_values contains pro_value %}
+      {% assign pro_values = pro_values | join: ',' %}
+      {% assign pro_values = pro_values | append: ',' | append: pro_value %}
+      {% assign pro_values = pro_values | split: ',' %}
+      {% assign pro_numvalues = pro_numvalues | join: ',' %}
+      {% assign pro_numvalues = pro_numvalues | append: ',' | append: pro_numvalues %}
+      {% assign pro_numvalues = pro_numvalues | split: ',' %}
+      {% assign variant_url = product_vari.url %}
+      {% assign variant_image = product_vari.image.src %}
+
+      {% if template.suffix contains 'ajax_filter_data' %}
+        {% unless colorTag == '' or colorTag contains pro_value %}
+          {% continue %}
+        {% endunless %}
+      {% endif %}
+      
+      {% include 'product-thumbnail' %}
+    {% endunless %}
+  {% endfor %}
+{% else %}
+  {% include 'product-thumbnail' %}
+{% endif %}

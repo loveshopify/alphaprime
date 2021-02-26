@@ -1,0 +1,58 @@
+{% assign videos = product.metafields.sf_product.videos | newline_to_br | split: '<br />' %}
+{%- capture product_videos_json -%}
+  {%- for video in videos -%}
+    {%- assign videoArray = video | strip | split: '|' -%}
+    {%- assign colors = videoArray[2] | downcase | split: ',' -%}
+    {%- for color in colors -%}
+      {%- if color != '' -%}
+        {
+          thumbnail: '{{ videoArray[0] }}',
+          url: '{{ videoArray[1] }}',
+          color: '{{ color }}'
+        }{%- if forloop.last == false %},{% endif -%}
+      {% endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{% capture new_line %}
+{% endcapture %}
+
+<script>
+  var productVideos = [{{ product_videos_json | split: new_line | join: '' }}];
+</script>
+
+{% if videos != empty %}
+  <div class="visible-small" style="display: none">
+    <a class="product-video-button" href="#video">
+      <img src="{{ 'play-icon.png' | asset_img_url: 'original' }}" style="max-width: 20px" alt=""/> Video
+    </a>
+  </div>
+
+  <style>
+    .product-video-button {
+      display: block;
+      padding: 10px 20px;
+      margin: -10px 0 20px;
+      text-align: center;
+      text-transform: uppercase;
+      color: #000;
+      background-color: #f2f2f2;
+    }
+
+    .product-video-button img {
+      vertical-align: top;
+    }
+  </style>
+
+  <script>
+    jQuery(document).ready(function($) {
+      $('.product-video-button').on('click', function(event) {
+        event.preventDefault();
+        var flickityInstance = $('.product_gallery').flickity();
+        flickityInstance.flickity('select', $('.product_gallery .gallery-cell.video-cell').index());
+
+        AP.scrollTop($('#pagecontent').offset().top, true, 800);
+      });
+    });
+  </script>
+{% endif %}

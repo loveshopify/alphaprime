@@ -1,0 +1,45 @@
+{% assign product_found = false %}
+{% assign skip = false %}
+{% assign collection_group = products | map: 'id' %}
+{% assign collection_group_thumb = collection_group | append : 'thumb' %}
+
+<div itemtype="http://schema.org/ItemList" class="product-list collection-matrix row">
+  {% for product in products limit: limit %}
+  	
+    {% if product.id == skip_product_id or skip == true %}
+      {% assign product_found = true %}
+    {% else %}
+      {% if forloop.rindex0 == 0 and product_found == false and forloop.length != products.count and template != 'search' and template != 'index' and type != 'block' %}
+        {% assign skip = true %}
+      {% else %}
+  		{% if template.suffix == 'color-swatch' %}
+        	{% include 'product-thumbnail-swatch', sidebar: sidebar %}
+  		{% else %}
+  			{% include 'product-thumbnail-new', sidebar: sidebar %}
+  		{% endif %}
+        {% comment %} {% if template.suffix contains 'ajax_filter_data' %}
+          {% include 'product-thumbnail-ajax', sidebar: sidebar %}
+        {% else %}
+          {% include 'product-thumbnail-new', sidebar: sidebar %}
+        {% endif %} {% endcomment %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+<div class="load-more__icon"></div>
+{% if template contains 'collection' or template contains 'search' %}
+  {% if settings.pagination_type == 'load_more' or settings.pagination_type == 'infinite_scroll' %}
+    <div class="js-load-more load-more"{% if settings.pagination_type == 'infinite_scroll' %} style="display: none"{% endif %}>
+    {% if paginate.next.url %}
+      <a href="{{ paginate.next.url }}" data-no-instant class="load-more__btn action_button continue-button">
+        {% if template contains 'collection' %}
+          {{ 'collections.general.load_more' | t }}
+        {% elsif template contains 'search' %}
+          {{ 'general.search.load_more' | t }}
+        {% endif %}
+      </a>
+    {% endif %}
+    </div>
+  {% endif %}
+{% endif %}
+

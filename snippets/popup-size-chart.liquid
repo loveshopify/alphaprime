@@ -1,0 +1,20 @@
+<div class="remodal" data-remodal-id="size-chart{{product_id}}" data-remodal-options="hashTracking: false">
+<a data-remodal-action="close" class="remodal-close"></a>
+
+  {% assign product_tags = product.tags | join: ' ' %}
+  {% if product_tags contains 'meta-size-chart-' %}
+    {% for tag in product.tags %}
+      {% if tag contains 'meta-size-chart-' %}
+        {% assign size_chart = tag | handle | remove: 'meta-size-chart-' %}
+        <h5 class="center">{{ pages[size_chart].title }}</h5>
+        <div class="feature_divider"></div>
+        {{ pages[size_chart].content }}
+      {% endif %}
+    {% endfor %}
+  {% elsif settings.size_chart != blank %}
+    <h5 class="center">{{ pages[settings.size_chart].title }}</h5>
+    <div class="feature_divider"></div>
+    {{ pages[settings.size_chart].content }}
+  {% endif %}
+
+</div>

@@ -1,0 +1,53 @@
+{% assign product_found = false %}
+{% assign skip = false %}
+{% assign collection_group = products | map: 'id' %}
+{% assign collection_group_thumb = collection_group | append : 'thumb' %}
+
+{% comment %} {% capture new_row %}
+    <br class="clear product_clear" />
+{% endcapture %} {% endcomment %}
+
+<div itemtype="http://schema.org/ItemList" class="product-list collection-matrix clearfix">
+  {% for product in products limit: limit %}
+    {% if product.id == skip_product_id or skip == true %}
+      {% assign product_found = true %}
+    {% else %}
+      {% if forloop.rindex0 == 0 and product_found == false and forloop.length != products.count and template != 'search' and template != 'index' and type != 'block' %}
+        {% assign skip = true %}
+      {% else %}
+
+        {% include 'product-thumbnail-alternate', sidebar: sidebar %}
+
+        {% if products_per_row == 2 %}
+          {% cycle collection_group: '', new_row %}
+        {% elsif products_per_row == 3 %}
+          {% cycle collection_group: '', '', new_row %}
+        {% elsif products_per_row == 4 %}
+          {% cycle collection_group: '', '', '', new_row %}
+        {% elsif products_per_row == 5 %}
+          {% cycle collection_group: '', '', '', '', new_row %}
+        {% elsif products_per_row == 6 %}
+          {% cycle collection_group: '', '', '', '', '', new_row %}
+        {% elsif products_per_row == 7 %}
+          {% cycle collection_group: '', '', '', '', '', '', new_row %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+<div class="load-more__icon"></div>
+{% if template contains 'collection' or template contains 'search' %}
+  {% if settings.pagination_type == 'load_more' or settings.pagination_type == 'infinite_scroll' %}
+    <div class="js-load-more load-more"{% if settings.pagination_type == 'infinite_scroll' %} style="display: none"{% endif %}>
+    {% if paginate.next.url %}
+      <a href="{{ paginate.next.url }}" data-no-instant class="load-more__btn action_button continue-button">
+        {% if template contains 'collection' %}
+          {{ 'collections.general.load_more' | t }}
+        {% elsif template contains 'search' %}
+          {{ 'general.search.load_more' | t }}
+        {% endif %}
+      </a>
+    {% endif %}
+    </div>
+  {% endif %}
+{% endif %}

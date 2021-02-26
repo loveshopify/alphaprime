@@ -1,0 +1,77 @@
+{% if sidebar %}
+  <div class="{% if products_per_row == 2 %}six columns {% cycle collection_group_thumb: 'alpha', 'omega' %}{% elsif products_per_row == 3 %}four columns {% cycle collection_group_thumb: 'alpha', '', 'omega' %}{% elsif products_per_row == 4 %}three columns {% cycle collection_group_thumb: 'alpha', '', '', 'omega' %}{% else %}one-fifth-sidebar column {% cycle collection_group_thumb: 'alpha', '', '', '', 'omega' %}{% endif %} thumbnail">
+{% else %}
+  <div class="
+    {% if products_per_row == 2 %}
+      eight columns {% cycle collection_group_thumb: 'alpha', 'omega' %}
+    {% elsif products_per_row == 3 %}
+      one-third column {% cycle collection_group_thumb: 'alpha', '', 'omega' %}
+    {% elsif products_per_row == 4 %}
+      four columns {% cycle collection_group_thumb: 'alpha', '', '', 'omega' %}
+    {% elsif products_per_row == 5 %}
+      one-fifth column {% cycle collection_group_thumb: 'alpha', '', '', '', 'omega' %}
+    {% elsif products_per_row == 6 %}
+      one-sixth column {% cycle collection_group_thumb: 'alpha', '', '', '', '', 'omega' %}
+    {% else %}
+      one-seventh column {% cycle collection_group_thumb: 'alpha', '', '', '', '', '', 'omega' %}
+    {% endif %} thumbnail">
+{% endif %}
+  
+
+  {% assign collection_handles = product.collections | map: 'handle' %}
+  {% if product.featured_image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+    {% assign alt_text = product.title %}
+  {% else %}
+    {% assign alt_text = product.featured_image.alt %}
+  {% endif %}
+
+  {% if settings.align_height %}
+    {% assign collection_height = settings.collection_height | plus: 0 %}
+    {% assign product_aspect_ratio = product.featured_image.aspect_ratio | plus: 0 %}
+    {% assign product_set_width = product_aspect_ratio | times: collection_height %}
+
+    {% if product.featured_image.width >= product.featured_image.height %}
+      {% assign align_height_value = 'width: 100%; height: auto;' %}
+    {% else %}
+      {% assign align_height_value = 'width: 100%;' %}
+    {% endif %}
+
+  {% endif %}
+
+  <div class="product-wrap">
+    <div class="relative product_image swap-{{ settings.collection_secondary_image }}">
+      <a href="{{ product.url | within: collection }}" itemprop="url">
+        <div class="image__container" style="{% if settings.align_height %} max-width: {{ product_set_width }}px; {% else %} max-width: {{- product.featured_image.width -}}px; {% endif %}">
+          <img  src="{{ product.featured_image | product_img_url: '100x' }}"
+                alt="{{ alt_text | escape }}"
+                class="lazyload {{ settings.image_loading_style }}"
+                style="{{ align_height_value }} max-width: {{- product.featured_image.width -}}px;"
+                data-sizes="auto"
+                data-src="{{ product.featured_image | product_img_url: '900x' }}"
+                data-srcset=" {{ product.featured_image | product_img_url: '300x' }} 300w,
+                              {{ product.featured_image | product_img_url: '400x' }} 400w,
+                              {{ product.featured_image | product_img_url: '500x' }} 500w,
+                              {{ product.featured_image | product_img_url: '600x' }} 600w,
+                              {{ product.featured_image | product_img_url: '700x' }} 700w,
+                              {{ product.featured_image | product_img_url: '800x' }} 800w,
+                              {{ product.featured_image | product_img_url: '900x' }} 900w"
+              />
+            </div>
+          {% if settings.collection_secondary_image != blank %}
+            <div class="image__container" style="max-width: {% if product.images[1] != blank %}{{- product.images[1].width -}}px{% else %}{{- product.featured_image.width -}}px{% endif %}; ">
+              <img src="{% if product.images[1] != blank %}{{ product.images[1] | product_img_url: '900x' }}{% else %}{{ product.featured_image | product_img_url: '900x' }}{% endif %}"
+              class="secondary lazyload"
+              alt="{{ alt_text | escape }}"
+              />
+            </div>
+          {% endif %}
+        </a>
+      {% include "product-details-alernate" %}
+    </div>
+    <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ product.url | within: collection }}" itemprop="url">
+      {% include "product-info-alernate" %}
+    </a>
+  </div>
+    
+{% include 'collection-swatch-alernate' %}
+</div>

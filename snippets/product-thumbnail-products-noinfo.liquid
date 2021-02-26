@@ -1,0 +1,142 @@
+{% comment %} {% if products_per_row == 2 %}
+  {% cycle collection_group: '', new_row %}
+{% elsif products_per_row == 3 %}
+  {% cycle collection_group: '', '', new_row %}
+{% elsif products_per_row == 4 %}
+  {% cycle collection_group: '', '', '', new_row %}
+{% elsif products_per_row == 5 %}
+  {% cycle collection_group: '', '', '', '', new_row %}
+{% elsif products_per_row == 6 %}
+  {% cycle collection_group: '', '', '', '', '', new_row %}
+{% elsif products_per_row == 7 %}
+  {% cycle collection_group: '', '', '', '', '', '', new_row %}
+{% endif %} {% endcomment %}
+
+{%- capture product_class -%}
+  {%- if sidebar -%}
+    {%- if products_per_row == 2 -%}
+      one-half column {% cycle collection_group_thumb: 'alpha', 'omega' %}
+    {%- elsif products_per_row == 3 -%}
+      one-third column {% cycle collection_group_thumb: 'alpha', '', 'omega' %}
+    {%- else -%}
+      one-fourth column {% cycle collection_group_thumb: 'alpha', '', '', 'omega' %}
+    {%- endif -%}
+  {%- else -%}
+    {%- if products_per_row == 2 -%}
+      eight columns {% cycle collection_group_thumb: 'alpha', 'omega' %}
+    {%- elsif products_per_row == 3 -%}
+      one-third column {% cycle collection_group_thumb: 'alpha', '', 'omega' %}
+    {%- elsif products_per_row == 4 -%}
+      four columns {% cycle collection_group_thumb: 'alpha', '', '', 'omega' %}
+    {%- elsif products_per_row == 5 -%}
+      one-fifth column {% cycle collection_group_thumb: 'alpha', '', '', '', 'omega' %}
+    {%- elsif products_per_row == 6 -%}
+      one-sixth column {% cycle collection_group_thumb: 'alpha', '', '', '', '', 'omega' %}
+    {%- else -%}
+      one-seventh column {% cycle collection_group_thumb: 'alpha', '', '', '', '', '', 'omega' %}
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+<div class="{{ product_class | strip_newlines | strip }} thumbnail">
+  {% assign collection_handles = product.collections | map: 'handle' %}
+  {% if product.featured_image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+    {% assign alt_text = product.title %}
+  {% else %}
+    {% assign alt_text = product.featured_image.alt %}
+  {% endif %}
+
+  {% if settings.align_height %}
+    {% assign collection_height = settings.collection_height | plus: 0 %}
+    {% assign product_aspect_ratio = product.featured_image.aspect_ratio | plus: 0 %}
+    {% assign product_set_width = product_aspect_ratio | times: collection_height %}
+
+    {% if product.featured_image.width >= product.featured_image.height %}
+      {% assign align_height_value = 'width: 100%; height: auto;' %}
+    {% else %}
+      {% assign align_height_value = 'width: 100%;' %}
+    {% endif %}
+  {% endif %}
+
+  {% assign change_model = false %}
+  {% for image in product.images %}
+    {% assign img_alt = image.alt | downcase %}
+    {% if img_alt contains ',size' %}
+      {% assign change_model = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  
+  {% assign secondary_image = '' %}
+  {% if pro_index and pro_index != '' %}
+    {% assign color_name = pro_value | downcase %}
+    {% assign count = 1 %}
+
+    {% if change_model %}
+      {% for image in product.images %}
+        {% assign img_alt = image.alt | downcase %}
+        {% assign image_color_name = img_alt | split: ',' | first %}
+        {% if image_color_name == color_name %}
+          {% if count == 2 %}
+            {% assign secondary_image = image.src %}
+            {% break %}
+          {% endif %}
+          {% assign count = count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% for image in product.images %}
+        {% assign img_alt = image.alt | downcase %}
+        {% if img_alt == color_name %}
+          {% if count == 2 %}
+            {% assign secondary_image = image.src %}
+            {% break %}
+          {% endif %}
+          {% assign count = count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% elsif product.images[1] != blank %}
+    {% assign secondary_image = product.images[1].src %}
+  {% else %}
+    {% assign secondary_image = product.featured_image.src %}
+  {% endif %}
+  <div class="product-wrap">
+    <div class="relative product_image swap-{% if secondary_image != '' %}true{% else %}false{% endif %}">
+      <a href="{% if variant_url and variant_url != '' %}{{ variant_url }}{% else %}{{ product.url | within: collection }}{% endif %}" itemprop="url">
+        <span class="image__container" style="{% if settings.align_height %}max-width: {{ product_set_width }}px;{% else %}max-width: {{- product.featured_image.width -}}px;{% endif %}">
+          {% if variant_image and variant_image != '' %}
+            <img
+              {% comment %} src="{{ variant_image | product_img_url: '100x' }}" {% endcomment %}
+              class="lazyload {{ settings.image_loading_style }}"
+              data-sizes="auto"
+              data-src="{{ variant_image | product_img_url: '900x' }}"
+              data-srcset="{{ variant_image | product_img_url: '300x' }} 300w, {{ variant_image | product_img_url: '400x' }} 400w, {{ variant_image | product_img_url: '500x' }} 500w, {{ variant_image | product_img_url: '600x' }} 600w, {{ variant_image | product_img_url: '700x' }} 700w, {{ variant_image | product_img_url: '800x' }} 800w, {{ variant_image | product_img_url: '900x' }} 900w"
+              alt="{{ alt_text | escape }}"
+            />
+          {% else %}
+            <img
+              {% comment %} src="{{ product.featured_image | product_img_url: '100x' }}" {% endcomment %}
+              class="lazyload {{ settings.image_loading_style }}"
+              data-sizes="auto"
+              data-src="{{ product.featured_image | product_img_url: '900x' }}"
+              data-srcset="{{ product.featured_image | product_img_url: '300x' }} 300w, {{ product.featured_image | product_img_url: '400x' }} 400w, {{ product.featured_image | product_img_url: '500x' }} 500w, {{ product.featured_image | product_img_url: '600x' }} 600w, {{ product.featured_image | product_img_url: '700x' }} 700w, {{ product.featured_image | product_img_url: '800x' }} 800w, {{ product.featured_image | product_img_url: '900x' }} 900w"
+              alt="{{ alt_text | escape }}"
+            />
+          {% endif %}
+          
+          {% if secondary_image != '' %}
+            <img
+              {% comment %} src="{{ secondary_image | product_img_url: '900x' }}" {% endcomment %}
+              class="secondary lazyload"
+              data-sizes="auto"
+              data-src="{{ secondary_image | product_img_url: '900x' }}"
+              data-srcset="{{ secondary_image | product_img_url: '300x' }} 300w, {{ secondary_image | product_img_url: '400x' }} 400w, {{ secondary_image | product_img_url: '500x' }} 500w, {{ secondary_image | product_img_url: '600x' }} 600w, {{ secondary_image | product_img_url: '700x' }} 700w, {{ secondary_image | product_img_url: '800x' }} 800w, {{ secondary_image | product_img_url: '900x' }} 900w"
+              alt="{{ alt_text | escape }}"
+            />
+          {% endif %}
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

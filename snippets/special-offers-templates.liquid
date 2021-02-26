@@ -1,0 +1,120 @@
+{% raw  %}
+
+<script id="saso-volume-discount-tiers" type="text/x-handlebars-template">
+<div class="saso-volume-discount-tiers">
+    <h4>{{{product_message}}}</h4>
+	
+	<table class="saso-table">
+    	<thead>
+			<tr>
+            	<th>Minimum Qty</th>
+                <th>{{# if price_type_flat}}Price per item{{/if}}{{# if price_type_percent}}Discount{{/if}}</th>
+            	<!--<th>&nbsp;</th>-->
+  			</tr>
+        </thead>
+        
+        <tbody>
+        {{#tiers}}
+    	<tr>
+        	<td>{{{quantity}}}+</td>
+        	<td>{{{price.title}}}<!-- {{{price_flat.title}}} --></td>
+            <!-- <td><a href="#" class="saso-add-to-cart" data-quantity="{{{quantity}}}">Add to Cart</a></td> -->
+  		</tr>    
+    	{{/tiers}}
+        </tbody>
+    </table>
+</div>
+</script>
+
+<script id="saso-cross-sell-popup" type="text/x-handlebars-template">
+<div class="saso-cross-sell-popup {{#if products.length}}{{else}}saso-cross-sell-popup0{{/if}}">
+    <span class="saso-message">{{{notifications_message}}}</span>
+    <br>
+    
+	<div class="saso-products-container">
+	<table><tr>
+    {{#products}}    
+    <td class="saso-product-container" data-product-id="{{id}}" data-variant-id="{{variants.0.id}}">
+        <div class="saso-image"><a href="/products/{{handle}}" class="saso-crosssell-nav" data-product-id="{{id}}"><img src="{{image.src}}" /></a></div>
+        <div class="saso-title">{{{title}}}</div>        
+        <div class="saso-variants-container" style="{{{variants_style}}}">{{{variants_select}}}</div>
+        <span class="saso-price">{{{variants.0.price}}}</span>
+        <span class="saso-was-price">{{{variants.0.compare_at_price}}}</span>
+        <br>
+        <button type="button" class="saso-add-to-cart saso-crosssell-nav" data-product-id="{{{id}}}" data-variant-id="{{{variants.0.id}}}">Add to Cart</button>
+    </td>
+    {{/products}}
+    </tr></table>
+    </div>
+    
+    {{# if click_here}}<a href="{{{click_here}}}" class="saso-click-here"><button type="button" class="saso-click-here">Click here to browse all choices</button></a>{{/if}}
+    
+    <div class="saso-hide-when-embedded">
+      <p><a href="#" class="saso-close">No thanks</a></p>
+    </div>
+  </div>
+</script>
+
+
+<script id="saso-bundle-popup" type="text/x-handlebars-template">
+<div class="saso-cross-sell-popup saso-bundle-popup">
+    <span class="saso-message">{{{notifications_message}}}</span>
+    <br>
+    
+	<div class="saso-products-container">
+      {{#products}}    
+      
+      <div class="saso-product-container" data-product-id="{{id}}" data-variant-id="{{variants.0.id}}" data-quantity="{{quantity}}">
+          <div class="saso-image">
+          	<a href="/products/{{handle}}" class="saso-crosssell-nav" data-product-id="{{id}}"><img src="{{image.src}}" /></a>
+            <div class="saso-quantity-container">
+          	{{{quantityx}}}
+      		</div>
+  		  </div>
+          <div class="saso-product-info">
+          	<div class="saso-title">{{{title}}}</div>        
+          	<div class="saso-variants-container" style="{{{variants_style}}}">{{{variants_select}}}</div>
+          	<span class="saso-price">{{{variants.0.price}}}</span>
+           </div>
+      </div>
+      <div class="saso-plus-container">
+          <div class="saso-plus-container-inner">+</div>
+      </div>
+      {{/products}}
+	</div>
+
+      <table><tr class="saso-bundle-row">
+        <td class="saso-equal-container">
+            =
+        </td>
+        <td class="saso-bundle-price-container">
+            {{{bundle_price_title}}}
+        </td>
+      </tr></table>
+    
+        
+    <button type="button" class="saso-add-to-cart saso-bundle-add-to-cart">Add entire Bundle to cart</button>
+    <div class="saso-bundle-success">{{{message_after}}}</div>
+    
+  </div>
+</script>
+
+
+
+
+<script id="saso-use-discount-code-cart" type="text/x-handlebars-template">
+<div class="saso-use-discount-code-cart-container">
+	<input type="text" class="saso-use-discount-code-cart-code" placeholder="Discount code"> 
+	<button type="button" class="saso-use-discount-code-cart-apply btn btn--secondary button">Apply</button>
+</div>
+</script>
+
+<script id="saso-use-discount-instead" type="text/x-handlebars-template">
+<div class="saso-use-discount-instead-container">
+    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" id="saso-use-discount-code-instead-check"> I will be using a coupon instead</label>
+</div>
+</script>
+
+
+
+{% endraw %}

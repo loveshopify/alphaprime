@@ -1,0 +1,51 @@
+
+{% if collection and collection.all_products_count > 1 %}
+  {% assign col = collection.handle %}
+{% else %}
+  {% assign col = product.collections.last.handle %}
+{% endif %}
+
+{% for tag in product.tags %}
+  {% if tag contains 'meta-related-collection-' %}
+    {% assign related_collection_handle = tag | remove: 'meta-related-collection-' %}
+    {% if collections[related_collection_handle].all_products_count > 0 %}
+      {% assign col = related_collection_handle %}
+      {% assign collection = collections[col] %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if col %}
+  {% if collections[col].all_products_count != 1 or collections[col].products.first.id != product.id %}
+    {% assign skip_product_id = product.id %}
+    {% assign products = collections[col].products %}
+    
+    {% unless sidebar %} <div class="container"> {% endunless %}
+      <div class="related-products__title {% unless section.settings.related_products_style == 'slider' %}{% if sidebar %}twelve columns{% else %}sixteen columns{% endif %}{% endunless %}">
+        <div class="feature_divider" style="padding-top: 40px; margin-bottom: 40px;"></div>
+        <h5 class="title left" style="font-weight: 600;">CUSTOMER ALSO BOUGHT</h5>
+      </div>
+      <div class="clear"></div>
+    {% unless sidebar %} </div> {% endunless %}
+
+    {% if section.settings.related_products_style == 'slider' %}
+      {% assign limit = section.settings.related_products_limit %}
+      <div class="related-products related-products--slider js-related-products-slider">
+        {% if col and collections[col].all_products_count > 0 %}
+          {% include 'product-slider-products', related_products: true %}
+        {% endif %}
+      </div>
+    {% else %}
+      {% assign limit = section.settings.related_products_limit | plus: 1 %}
+      {% assign products_per_row = section.settings.products_per %}
+      {% if col and collections[col].all_products_count > 0 %}
+        {% unless sidebar %}<div class="container related-products--grid">{% endunless %}
+          <div class="{% if sidebar %}twelve{% else %}sixteen{% endif %} columns">
+            {% include 'product-loop', related_products: true %}
+          </div>
+        {% unless sidebar %}</div>{% endunless %}
+      {% endif %}
+    {% endif %}
+
+  {% endif %}
+{% endif %}

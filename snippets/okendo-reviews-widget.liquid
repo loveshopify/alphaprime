@@ -1,0 +1,116 @@
+<div class="okeReviews-widget-holder" data-oke-reviews-widget-holder data-oke-reviews-product-id="shopify-{{ product.id }}"> 
+  <div data-oke-reviews-nav-bar></div> 
+  <div data-oke-reviews-widget>{{ product.metafields.okendo.ProductReviewsWidgetSnippet }}</div>
+  <div data-oke-reviews-qanda></div> 
+</div>
+
+<style>
+  .okeReviews-reviewsWidget-header-poweredBy {
+    display: none !important;
+  }
+  
+  #okeReviews-reviews-panel {
+    margin-top: -60px;
+  }
+  
+  .okeReviews-reviewsWidget-header {
+    display: grid !important;
+  }
+  
+  .okeReviews-qandaWidget-poweredBy {
+    display: none !important;
+  }
+  
+  .okeReviews-qandaWidget-header {
+    display: grid !important;
+  }
+  #okeReviews-qanda-panel {
+    margin-top: -60px;
+  }
+
+  @media all and (max-width: 767px) {
+    .okeReviews-reviewsWidget-header-controls {
+      margin-top: -60px;
+      margin-bottom: 60px;
+      text-align: center !important;
+    }
+
+    .okeReviews-qandaWidget-header-controls {
+      margin-top: -100px;
+      margin-bottom: 60px;
+      text-align: center !important;
+    }
+  }
+
+  @media all and (max-width: 852px) {
+    .okeReviews-qandaWidget-header-controls {
+      margin-top: -120px;
+      margin-bottom: 60px;
+      text-align: center !important;
+    }
+
+    .container.reviews {
+      width: 100%;
+      max-width: 100%;
+      padding: 0px;
+      margin-top: 80px;
+  	}
+  }
+  @media all and (max-width: 800px) {
+    .okeReviews-qandaWidget-header-controls {
+      margin-top: -100px;
+      margin-bottom: 60px;
+      text-align: center !important;
+    }
+  }
+  @media all and (max-width: 374px) {
+    .okeReviews-qandaWidget-header-controls {
+      margin-top: -120px;
+      margin-bottom: 60px;
+      text-align: center !important;
+    }
+  }
+
+  .okeReviews-reviewsWidget-reviewsAggregate.js-okeReviews-reviewsAggregateContainer {
+    display: none;
+  }
+  
+  .okeReviews-reviewsWidget-reviews.js-okeReviews-reviewsContainer {
+    
+  }
+  
+  .okeReviews-reviews-controls {
+    display: none;
+  }
+  
+  .okeReviews-reviews-review {
+    display: none;
+  }
+  
+  .okeReviews-reviews-review:nth-child(1) {
+    display: block;
+  }
+  .okeReviews-reviews-review:nth-child(2) {
+    display: block;
+  }
+  
+  .okeReviews-reviewsWidget-header-controls-writeReview {
+    color: transparent !important;
+  }
+  
+  .okeReviews-reviewsWidget-header-controls-writeReview:after {
+	color: #fff;
+    content: "LEAVE A REVIEW";
+    position: relative;
+    margin-top: -20px;
+    display: block;
+  }
+</style>
+
+<script>
+$( window ).on("load", function() {
+  $("button.okeReviews-reviews-showMore").click(function() {
+    $(".okeReviews-reviews-review").css("display", "block");
+  });
+});
+</script>

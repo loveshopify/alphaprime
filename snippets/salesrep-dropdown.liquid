@@ -1,0 +1,12 @@
+<style>select {padding: 0;}</style>
+{% assign attribute = 'Sales Representative' %}
+<p id="sales_representative_title"><label for="sales_representative_id">Who helped you?</label></p>
+
+<select id="sales_representative_id" name="attributes[{{ attribute }}]">
+  {% for i in (1..4) %}
+    {% capture option %}{% cycle "", "No Sales Rep.", "Anita Herbert", "Nicole Hermanson" %}{% endcapture %}
+    <option value="{{ option }}"{% if cart.attributes[attribute] == option %} selected="selected"{% endif %}>{{ option }}</option>
+  {% endfor %}
+</select>
+
+<p id="sales_representative_hint">Please select an item in the list.</p>

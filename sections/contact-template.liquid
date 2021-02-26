@@ -1,0 +1,234 @@
+{% comment %}
+** Contact page - custom view **
+- Page template
+{% endcomment %}
+
+{% if section.settings.image != nil %}
+  <header class="banner center page_banner dark-overlay-{{ section.settings.image_darken }}">
+    <img  src="{{ section.settings.image | img_url: '100x' }}"
+          alt="{% if section.settings.image.alt != blank %}{{ section.settings.image.alt | escape }}{% else %}{{ page.title | escape }}{% endif %}"
+          class="lazyload {{ settings.image_loading_style }}"
+          data-src="{{ section.settings.image | img_url: '1400x', format: 'pjpg' }}"
+          sizes="100vw"
+          srcset="{{ section.settings.image | img_url: '480x', format: 'pjpg' }} 480w,
+                  {{ section.settings.image | img_url: '765x', format: 'pjpg' }} 765w,
+                  {{ section.settings.image | img_url: '1400x', format: 'pjpg' }} 1400w,
+                  {{ section.settings.image | img_url: '2048x', format: 'pjpg' }} 2048w"
+           />
+    <div class="caption captionOverlay--true">
+      <h1 class="headline">{{ section.settings.title }}</h1>
+      <p class="subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+  </header>
+{% endif %}
+
+<div class="container main content">
+  <div class="row">
+    <div class="ten columns offset-by-three page">
+      {% if section.settings.image == nil %}
+        <h1>{{ page.title }}</h1>
+        <div class="feature_divider"></div>
+      {% endif %}
+
+      {{ page.content }}
+
+      {% form 'contact' %}
+        {% if form.posted_successfully? %}
+          <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+        {% endif %}
+
+        {% if form.errors %}
+          <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+        {% assign message = 'contact.form.message' | t %}
+          <ul class="center">
+            {% for field in form.errors %}
+              {% if field == 'form' %}
+                <li>
+                  {{ form.errors.messages[field] }}
+                </li>
+              {% else %}
+                <li>
+                  {% assign field_name = field | replace: 'body', message %}
+                  {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <br class="clear" />
+        <div class="row">
+          <div class="eight columns alpha">
+            {% assign name_attr = 'contact.form.name' | handle %}
+            <label for="contactFormName">{{ 'contact.form.name' | t }} <span class="red">*</span></label>
+            <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+          </div>
+          <div class="eight columns omega">
+            <label for="contactFormEmail">{{ 'contact.form.email' | t }} <span class="red">*</span></label>
+            <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+          </div>
+        </div>
+        {% comment %}
+          {% assign name_attr = 'contact.form.phone' | t | handle %}
+          <label for="contactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
+          <input type="tel" id="contactFormPhone" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+          {% endcomment %}
+
+        <label for="contactFormMessage">{{ 'contact.form.message' | t }} <span class="red">*</span></label>
+        <textarea rows="5" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}" required="required">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+        <input type="submit" class="submit action_button" value="{{ 'contact.form.send' | t }}" />
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+{% if section.settings.show_map and section.settings.contact_address != blank %}
+  {% if section.settings.map_stretch %}
+    <div class="embed-container maps">
+      <iframe width="100%" height="{{ section.settings.map_height }}" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q={{ section.settings.contact_address | replace: ' ', '+' }}&amp;z={{ section.settings.zoom_level }}&amp;output=embed"></iframe>
+    </div>
+  {% else %}
+    <div class="container">
+      <div class="ten columns offset-by-three">
+          <div class="embed-container maps">
+            <iframe width="100%" height="{{ section.settings.map_height }}" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q={{ section.settings.contact_address | replace: ' ', '+' }}&amp;z={{ section.settings.zoom_level }}&amp;output=embed"></iframe>
+          </div>
+      </div>
+    </div>
+  {% endif %}
+{% elsif section.settings.show_map %}
+  {% if section.settings.map_stretch %}
+    <div class="map-placeholder">
+      {% capture i %}{% cycle "1", "2" %}{% endcapture %}
+      {{ 'lifestyle-' | append: i | placeholder_svg_tag: 'placeholder-svg placeholder-svg--map' }}
+    </div>
+  {% else %}
+    <div class="container">
+      <div class="ten columns offset-by-three">
+        <div class="map-placeholder">
+          {% capture i %}{% cycle "1", "2" %}{% endcapture %}
+          {{ 'lifestyle-' | append: i | placeholder_svg_tag: 'placeholder-svg placeholder-svg--map' }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+<style>
+  {% if section.settings.map_greyscale %}
+    .maps {
+      filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+ */
+      filter: gray; /* IE6-9 */
+      -webkit-filter: grayscale(99%); /* Chrome 19+ & Safari 6+ */
+      -webkit-backface-visibility: hidden;  /* Fix for transition flickering */
+    }
+  {% endif %}
+  {% if section.settings.map_scrolling %}
+    .maps iframe {
+      pointer-events: auto;
+    }
+  {% endif %}
+  @media only screen and (max-width: 767px) {
+    .maps iframe{
+      height: {{ section.settings.map_height | divided_by: 1.5 | round }}px;
+    }
+  }
+  .map-placeholder {
+    width: 100%;
+    height: {{ section.settings.map_height }}px;
+  }
+</style>
+
+{% schema %}
+
+{
+  "name": "Contact",
+  "class": "contact-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1800 x 800px recommended"
+    },
+    {
+      "type": "checkbox",
+      "id": "image_darken",
+      "label": "Darken banner image",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Subheading"
+    },
+    {
+        "type": "header",
+        "content": "Map"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_map",
+      "label": "Show map",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "contact_address",
+      "label": "Street address",
+      "info": "The full address that will be placed on the map."
+    },
+    {
+      "type": "range",
+      "id": "zoom_level",
+      "label": "Map zoom level",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "map_height",
+      "min": 250,
+      "max": 500,
+      "step": 50,
+      "unit": "px",
+      "label": "Height",
+      "default": 400
+    },
+    {
+      "type": "checkbox",
+      "id": "map_stretch",
+      "label": "Stretch to fill page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "map_greyscale",
+      "label": "Enable greyscale map",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "map_scrolling",
+      "label": "Enable scrolling",
+      "default": false
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,368 @@
+{% capture menu_item_paths %}
+mens-categories,
+mens-categories-all-products,
+mens-categories-bottoms,
+mens-categories-compression,
+mens-categories-hoodies-jackets,
+mens-categories-shorts,
+mens-categories-t-shirts-tanks,
+mens-tops,
+mens-bottoms,
+mens-collections,
+mens-collections-alpha,
+mens-collections-core,
+womens-categories,
+womens-categories-all-products,
+womens-categories-bottoms-leggings,
+womens-categories-hoodies-jackets,
+womens-categories-shorts,
+womens-categories-sports-bra,
+womens-categories-tops-tanks,
+womens-tops,
+womens-bottoms,
+womens-collections,
+womens-collections-fleece,
+womens-collections-genesis,
+womens-collections-lux,
+womens-collections-relax,
+womens-collections-victoria,
+accessories-categories,
+accessories-categories-all-products,
+accessories-categories-bags,
+accessories-categories-headwear,
+accessories-categories-gift-cards,
+accessories-categories-lifting-gear,
+accessories-categories-shaker-bottles,
+accessories-collections,
+accessories-collections-prime-series
+{% endcapture %}
+
+{% capture menu_item_thumbnails %}
+{{ 'mm-mens-categories.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-categories-all-products.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-categories-bottoms.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-categories-compression.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-categories-hoodies-jackets.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-categories-shorts.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-categories-t-shirts-tanks.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-tops.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-bottoms.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-collections.png' | asset_img_url: '80x120' }},
+{{ 'mm-mens-collections-alpha.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-mens-collections-core.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories-all-products.png' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories-bottoms-leggings.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories-hoodies-jackets.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories-shorts.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories-sports-bra.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-categories-tops-tanks.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-tops.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-bottoms.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-collections.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-collections-fleece.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-collections-genesis.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-collections-lux.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-collections-relax.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-womens-collections-victoria.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-all.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-all.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-bags.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-headwear.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-gift-cards.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-lifting-gear.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-cat-shaker-bottles.png' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-col-all.jpg' | asset_img_url: '80x120' }},
+{{ 'mm-accessories-col-prime-series.jpg' | asset_img_url: '80x120' }}
+{% endcapture %}
+
+<style>
+.nav-mobile-menu {
+  margin: 55px -15px;
+  text-transform: uppercase;
+}
+.nav-mobile-menu ul {
+  padding: 0;
+  margin: 0;
+}
+.nav-mobile-menu li {
+  list-style: none;
+}
+.nav-mobile-menu .menu-item {
+  margin: 0 0 1px 0;
+}
+.nav-mobile-menu .menu-item.menu-item-currency {
+  margin-top: 15px;
+}
+.nav-mobile-menu .menu-item a {
+  display: block;
+  color: black;
+}
+.nav-mobile-menu .menu-item > a {
+  padding: 12px 15px;
+  background-color: #f5f5f5;
+}
+.nav-mobile-menu .menu-item-has-children > a {
+  position: relative;
+}
+.nav-mobile-menu .menu-item-has-children > a:after {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  content: "";
+  width: 6px;
+  height: 10px;
+  margin-top: -5px;
+  display: inline-block;
+  background: url({{ 'right-angle-icon.png' | asset_img_url: 'master' }}) no-repeat center;
+}
+.nav-mobile-menu .menu-item-face-guards,
+.nav-mobile-menu .menu-item-supplements,
+.nav-mobile-menu .menu-item-sale,
+.nav-mobile-menu .menu-item-gift-shop,
+.nav-mobile-menu .menu-item-mens,
+.nav-mobile-menu .menu-item-womens,
+.nav-mobile-menu .menu-item-accessories {
+  margin: 0 15px 15px;
+}
+.nav-mobile-menu .menu-item-face-guards > a,
+.nav-mobile-menu .menu-item-supplements > a,
+.nav-mobile-menu .menu-item-sale > a,
+.nav-mobile-menu .menu-item-gift-shop > a,
+.nav-mobile-menu .menu-item-mens > a,
+.nav-mobile-menu .menu-item-womens > a,
+.nav-mobile-menu .menu-item-accessories > a {
+  line-height: 50px;
+  font-size: 21px;
+  background-color: #ebeae8;
+}
+.nav-mobile-menu .menu-item-face-guards > a:after,
+.nav-mobile-menu .menu-item-supplements > a:after,
+.nav-mobile-menu .menu-item-sale > a:after,
+.nav-mobile-menu .menu-item-mens > a:after,
+.nav-mobile-menu .menu-item-womens > a:after,
+.nav-mobile-menu .menu-item-accessories > a:after {
+  display: none;
+}
+.nav-mobile-menu .menu-item-gift-shop > a {
+  text-indent: -999px;
+  background: #ebeae8 url({{ 'mm-gift-shop-bg.png' | asset_img_url: 'master' }}) no-repeat right bottom;
+}
+.nav-mobile-menu .menu-item-mens > a {
+  background: #ebeae8 url({{ 'mm-mens-bg.png' | asset_img_url: 'master' }}) no-repeat right bottom;
+}
+.nav-mobile-menu .menu-item-womens > a {
+  background: #ebeae8 url({{ 'mm-womens-bg.png' | asset_img_url: 'master' }}) no-repeat right bottom;
+}
+.nav-mobile-menu .menu-item-accessories > a {
+  background: #ebeae8 url({{ 'mm-accessories-bg.png' | asset_img_url: 'master' }}) no-repeat right bottom;
+}
+.nav-mobile-menu .menu-item-supplements > a {
+  background: #ebeae8 url({{ 'mm-supplements-bg.png' | asset_img_url: 'master' }}) no-repeat right bottom; 
+}
+.nav-mobile-menu .menu-item-face-guards > a {
+  background: #ebeae8 url({{ 'mm-face-guards-bg.png' | asset_img_url: 'master' }}) no-repeat right bottom;
+  
+}
+.nav-mobile-menu .menu-item-cart > a,
+.nav-mobile-menu .menu-item-search > a,
+.nav-mobile-menu .menu-item-account > a {
+  padding-left: 50px;
+}
+.nav-mobile-menu .menu-item-cart > a {
+  background: #f5f5f5 url({{ 'cart-icon.png' | asset_img_url: 'master' }}) no-repeat 15px center;
+}
+.nav-mobile-menu .menu-item-search > a {
+  background: #f5f5f5 url({{ 'search-icon.png' | asset_img_url: 'master' }}) no-repeat 15px center;
+}
+.nav-mobile-menu .menu-item-account > a {
+  background: #f5f5f5 url({{ 'user-icon.png' | asset_img_url: 'master' }}) no-repeat 15px center;
+}
+.nav-mobile-menu .menu-item > ul,
+.nav-mobile-menu .submenu-item > ul {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 1;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+.nav-mobile-menu .submenu-item {
+  margin: 0 15px 0;
+}
+.nav-mobile-menu .submenu-item.menu-item-has-children > a:after {
+  right: 0;
+}
+.nav-mobile-menu .submenu-item.submenu-item-back {
+  margin: 0 0 15px 0;
+}
+.nav-mobile-menu .submenu-item > a {
+  padding: 23px 0;
+}
+.nav-mobile-menu .submenu-item.submenu-item-back > a {
+  padding: 12px 15px 12px 35px;
+  background: #ebeae8 url({{ 'left-angle-icon.png' | asset_img_url: 'master' }}) no-repeat 15px center;
+}
+.nav-mobile-menu .submenu-item.submenu-item-has-thumbnail > a:before {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  content: "";
+  width: 55px;
+  height: 3px;
+  background-color: white;
+}
+.nav-mobile-menu .submenu-item.submenu-item-has-thumbnail > a img {
+  display: inline-block;
+  max-width: 40px;
+  height: auto;
+  margin: -20px 15px -20px 0;
+  vertical-align: top;
+}
+.nav-mobile-menu .submenu-item.submenu-item-new-releases {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-top: 0;
+}
+.nav-mobile-menu .submenu-item.submenu-item-new-releases > a {
+  padding: 0;
+}
+.nav-mobile-menu .submenu-item.submenu-item-new-releases > a img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+.nav-mobile-menu .submenu-item + .menu-item {
+  margin-top: 15px;
+}
+.nav-mobile-menu .submenu-item + .submenu-item {
+  border-top: 1px solid #e2e2e2;
+}
+.nav-mobile-menu .submenu-item.submenu-item-back + .submenu-item {
+  border-top: 0;
+}
+</style>
+
+{%capture search_menu_item %}
+<li class="menu-item menu-item-search">
+  <a href="#search" data-mfp-src="searchFormPopup">Search</a>
+</li>
+{% endcapture %}
+
+{%capture currencies_menu_item %}
+{% if settings.show_multiple_currencies %}
+  <li class="menu-item menu-item-currency menu-item-has-children">
+    <a href="#currency" class="selected-currency">{{ shop.currency }}</a>
+    <ul class="animated slideInLeft">
+      <li class="submenu-item submenu-item-back"><a href="#back">Back</a></li>
+      <li class="submenu-item">
+        {% include 'currencies-switcher' %}
+      </li>
+    </ul>
+  </li>
+{% endif %}
+{% endcapture %}
+
+<div style="display: none">
+  <div class="nav-mobile-menu">
+    <ul>
+      {% for link in linklists['mobile-menu'].links %}
+        <li class="menu-item menu-item-{{ link.handle }}{% if link.links != empty %} menu-item-has-children{% endif %}">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+          {% if link.links != empty %}
+            {% assign level_0_handle = link.handle %}
+            <ul class="animated slideInLeft">
+              <li class="submenu-item submenu-item-back"><a href="#back">{{ link.title }}</a></li>
+              {% for link in link.links %}
+                <li class="submenu-item{% if link.links != empty %} menu-item-has-children{% endif %}">
+                  <a href="{{ link.url }}" data-menu-item-path="{{ level_0_handle }}-{{ link.handle }}">{{ link.title }}</a>
+                  {% if link.links != empty %}
+                    {% assign level_1_handle = link.handle %}
+                    <ul class="animated slideInLeft">
+                      <li class="submenu-item submenu-item-back"><a href="#back">{{ link.title }}</a></li>
+                      {% for link in link.links %}
+                        <li class="submenu-item">
+                          <a href="{{ link.url }}" data-menu-item-path="{{ level_0_handle }}-{{ level_1_handle }}-{{ link.handle }}">{{ link.title }}</a>
+                        </li>
+                      {% endfor %}
+                      {{ search_menu_item }}
+                      {{ currencies_menu_item }}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+              {% if link.handle == 'mens' %}
+                <li class="submenu-item submenu-item-new-releases"><a href="{{ collections['mens-new-releases'].url }}"><img src="{{ 'mm-mens-new-releases.jpg' | asset_img_url: 'master' }}" alt=""/></a></li>
+              {% endif %}
+              {% if link.handle == 'womens' %}
+                <li class="submenu-item submenu-item-new-releases"><a href="{{ collections['womens-new-releases'].url }}"><img src="{{ 'mm-womens-new-releases.jpg' | asset_img_url: 'master' }}" alt=""/></a></li>
+              {% endif %}
+              {{ search_menu_item }}
+              {{ currencies_menu_item }}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+      {{ search_menu_item }}
+      {% if shop.customer_accounts_enabled %}
+        {% if customer %}
+          <li class="menu-item menu-item-account"><a href="/account" title="{{ 'layout.customer.my_account' | t }}">Account</a></li>
+        {% else %}
+          <li class="menu-item menu-item-account"><a href="/account/login">Account</a></li>
+        {% endif %}
+      {% endif %}
+      {{ currencies_menu_item }}
+      {% if settings.phone_number != blank %}
+        <li class="menu-item menu-item-phone"><a href="tel:+{{ settings.phone_number | replace: ' ', '' | replace: '+', '' | replace: '-', '' }}">{{ settings.phone_number }}</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+<script>
+  jQuery(document).ready(function($) {
+    var $navMobileMenu = $('.nav-mobile-menu');
+
+    $('.mobile_nav').on('click', function(event) {
+      event.preventDefault()
+      
+      $.magnificPopup.open({
+        items: {
+          src: $navMobileMenu,
+          type: 'inline'
+        },
+        mainClass: 'mfp-sidebar-left',
+        disableOn: function() {
+          return $(window).width() < 480
+        },
+        callbacks: {
+          afterClose: function() {
+            $navMobileMenu.find('.menu-item ul').hide()
+          }
+        }
+      })
+    })
+
+    $(document).on('click', '.nav-mobile-menu .menu-item-has-children > a', function(event) {
+      event.preventDefault()
+      var $this = $(this)
+      $this.parent('li').find('> ul').show()
+    })
+
+    $(document).on('click', '.nav-mobile-menu .submenu-item-back', function(event) {
+      event.preventDefault()
+      var $this = $(this)
+      $this.parent('ul').hide()
+    })
+
+    // add menu item thumbnails
+    var thumbnails = ['{{ menu_item_thumbnails | strip_newlines | split: ',' | join: "','" }}'];
+    $.each(['{{ menu_item_paths | strip_newlines | split: ',' | join: "','" }}'], function(index, path) {
+      $('.nav-mobile-menu .submenu-item a[data-menu-item-path="' + path + '"]').prepend('<img src="' + thumbnails[index] + '" alt=""/>')
+        .parent('li').addClass('submenu-item-has-thumbnail')
+    })
+  })
+</script>

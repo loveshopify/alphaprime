@@ -1,0 +1,61 @@
+{% include 'include-map' %}
+
+{% schema %}
+
+{
+  "name": "Map",
+  "class": "map-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "contact_address",
+      "label": "Street address",
+      "info": "The full address that will be placed on the map."
+    },
+    {
+      "type": "range",
+      "id": "zoom_level",
+      "label": "Map zoom level",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "map_height",
+      "min": 250,
+      "max": 500,
+      "step": 50,
+      "unit": "px",
+      "label": "Height",
+      "default": 400
+    },
+    {
+      "type": "checkbox",
+      "id": "map_stretch",
+      "label": "Wide display",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "map_greyscale",
+      "label": "Enable greyscale map",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "map_scrolling",
+      "label": "Enable scrolling",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Map",
+      "category": "Store information"
+    }
+  ]
+}
+
+{% endschema %}

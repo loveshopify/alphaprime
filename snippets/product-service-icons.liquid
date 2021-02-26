@@ -1,0 +1,30 @@
+<div class="product-service-icons badges1">
+  {% assign productType = product.type %}
+  {% assign productTypes = settings.restricted_product_types | split: ',' %}
+
+  {% assign isSupplementType = false %}
+{% comment %}
+  {% for pType in productTypes %}
+    {% if productType == pType %}
+      {% assign isSupplementType = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endcomment %}
+  {% if productType == 'Supplement' or productType == 'Accessories' %}
+    <div><img src="{{ 'regimen-icons.png' | asset_url }}"/></div>
+{% comment %}
+      <div><img src="{{ 'icons-free-shipping-us.png' | asset_url }}"/></div>
+      <div><img src="{{ 'icons-free-us-return.png' | asset_url }}"/></div>
+      <div><img src="{{ 'icons-high-quality.png' | asset_url }}"/></div>
+      regimen-icons
+    </div>
+{% endcomment %}
+  {% else %}
+    <div><img src="{{ 'icons-custom-fabrics.png' | asset_url }}"/></div>
+    <div><img src="{{ 'icons-free-shipping-us.png' | asset_url }}"/></div>
+    <div><img src="{{ 'icons-free-us-return.png' | asset_url }}"/></div>
+    <div><img src="{{ 'icons-high-quality.png' | asset_url }}"/></div>
+  {% endif %}
+  <div class="clear"></div>
+</div>

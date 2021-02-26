@@ -1,0 +1,65 @@
+{% if section.blocks.size > 0 %}
+  {% assign products_per_row = 4 %}
+  <div class="ap-product-list">
+    <div class="container">
+      {% if section.settings.heading %}
+      <div class="ap-product-list--header">
+        <h3>{{ section.settings.heading }}</h3>
+        {% if section.settings.subheading %}
+          <p>{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      <div itemtype="http://schema.org/ItemList" class="ap-product-list--products product-list collection-matrix row">
+      {% for block in section.blocks %}
+        {% assign product = all_products[block.settings.featured_product] %}
+        {% assign hidden_swatches = block.settings.hidden_swatches | downcase | split: ',' %}
+        {% include 'product-thumbnail-new' %}
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product List",
+  "class": "ap-product-list-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "url",
+      "id": "heading_link",
+      "label": "Heading Link"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "featured_product",
+          "label": "Product"
+        },
+        {
+          "type": "textarea",
+          "id": "hidden_swatches",
+          "label": "Hidden Swatches"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

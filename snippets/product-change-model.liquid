@@ -1,0 +1,85 @@
+{% assign color_option_index = '' %}
+{% for option in product.options %}
+  {% assign downcased_option = option | downcase %}
+  {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+    {% assign color_option_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+{% assign change_model = false %}
+{% assign model_sizes = '' %}
+{% for product_image in product.images %}
+  {% assign alt = product_image.alt | downcase %}
+  {% if alt contains 'size' %}
+    {% assign change_model = true %}
+    {% assign model_size = alt | split: 'size' | last | strip %}
+    {% unless model_sizes contains model_size %}
+      {% assign model_sizes = model_sizes | append: ',' | append: model_size %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{% assign model_sizes = model_sizes | remove_first: ',' %}
+
+{% if change_model and model_sizes != '' %}
+  {% comment %} {% assign change_model_text = 'Change Model' %}
+  {% assign model_name = product.metafields.model.name %}
+  {% if model_name != null and model_name != '' %}
+    {% assign change_model_text = model_name %}
+  {% endif %} {% endcomment %}
+  
+  <div class="change-size">
+    <span class="change-label-size">
+      <span>&nbsp;</span>
+      <a class="model-change"><b>Change Model</b></a>
+    </span>
+    <div class="model-legend-nav">
+      {% assign model_sizes = model_sizes | split: ',' %}
+      {% for model_size in model_sizes %}
+        <div class="model-legend-item">
+          {% assign key = model_size | upcase | prepend: 'size_' %}
+          {% assign model_name = product.metafields.model[key] %}
+          <a class="model-legend-label" href="#select_size_{{ model_size }}" data-model-size="{{ model_size }}" data-model-name="{% if model_name != null and model_name != '' %}{{ model_name | strip_html }}{% else %}Wearing APA{% endif %}">
+            <span>{% if model_name != null and model_name != '' %}{{ model_name }}{% else %}Wearing APA{% endif %} Size {{ model_size | upcase }}</span>
+          </a>
+        </div>
+      {% endfor %}
+      <div class="model-legend-nav-close">
+        <img src="{{ 'close.png' | asset_url }}" alt="Close icon">
+      </div>
+     </div>
+  </div>
+
+  <script>
+    jQuery(document).ready(function($) {
+      var changeModelWrap = $('.change-size');
+      var changeModelNav = changeModelWrap.find('.model-legend-nav');
+      
+      changeModelWrap.find('.model-change, .model-legend-nav-close').on('click', function(e) {
+        e.preventDefault();
+        changeModelNav.toggle();
+      });
+
+      changeModelWrap.find('.model-legend-label').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+
+        changeModelWrap.find('.model-legend-label').removeClass('active');
+        $this.addClass('active');
+        
+        changeModelWrap.find('.change-label-size > span').text($this.data('model-name') + ' Size ' + $this.data('model-size').toUpperCase());
+        Cookies.set('model_size', $this.data('model-size'));
+        changeModelNav.hide();
+
+        $(window).trigger('product:forceUpdateGallery');
+      });
+
+      var modelSize = Cookies.get('model_size') || false;
+      if (modelSize) {
+        changeModelWrap.find('.model-legend-label[data-model-size="' + modelSize + '"]').trigger('click');
+      } else {
+        changeModelWrap.find('.model-legend-label:first').trigger('click');
+      }
+    })
+  </script>
+{% endif %}

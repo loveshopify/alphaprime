@@ -1,0 +1,384 @@
+{%- if section.settings.layout_mode == 'carousel' -%}
+  {%- capture flickity_options -%}
+  {
+    "prevNextButtons": true,
+    "pageDots": false,
+    "wrapAround": false,
+    "contain": true,
+    "cellAlign": "center",
+    "watchCSS": true,
+    "dragThreshold": 8,
+	"groupCells": false,
+	"imagesLoaded": true,
+    "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+  }
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- capture section_settings -%}
+{
+  "layout": {{ section.settings.layout_mode | json }}
+}
+{%- endcapture -%}
+
+<section class="Section Section--spacingNormal" data-section-id="{{ section.id }}" data-section-type="featured-collections" data-settings='{{ section_settings }}'>
+  <header class="SectionHeader SectionHeader--center">
+    <div class="Container">
+    {%- if section.settings.title != blank -%}
+      <h3 class="SectionHeader__SubHeading Heading u-h6" style="font-size: {{ section.settings.title-font_size }}px; color: {{ section.settings.title-font_color }};">{{ section.settings.title | escape }}</h3>
+      <!-- <h3 class="SectionHeader__SubHeading Heading u-h6" style="font-family: {{ section.settings.title-font }}; font-size: {{ section.settings.title-font_size }}px; color: {{ section.settings.title-font_color }};">{{ section.settings.title | escape }}</h3> -->
+      <!-- <h3 class="SectionHeader__SubHeading Heading u-h6" style="font-family: {{ section.settings.title-font | font_face }}; font-size: {{ section.settings.title-font_size }}px; color: {{ section.settings.title-font_color }};">{{ section.settings.title | escape }}</h3> -->
+    {%- endif -%}
+
+    {%- if section.blocks.size > 1 -%}
+      <div>
+        <ul class="nav-tabs">
+        {%- for block in section.blocks -%}
+          {%- assign collection = collections[block.settings.collection] -%}
+			<li class="nav-item">
+              <a class="nav-link {% if forloop.first %}active{% endif %}" data-toggle="tab" href="#{{ block.settings.div_id }}">
+                {%- if collection != empty -%}
+                  {{- block.settings.title | default: collection.title -}}
+                {%- else -%}
+                  {{- 'home_page.onboarding.collection_title' | t -}}
+                {%- endif -%}
+              </a>
+            </li>
+        {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+    </div>
+  </header>
+
+<div class="tab-content">
+  {%- for block in section.blocks -%}
+    {%- assign collection = collections[block.settings.collection] -%}
+      <div id="{{ block.settings.div_id }}" class="container tab-pane {% if forloop.first %}active{% endif %}">
+        <div class="ProductListWrapper">
+          {%- if collection != empty -%}
+            {%- assign item_count = block.settings.grid_items_count -%}
+            {%- assign products_per = section.settings.grid_desktop_items_per_row -%}
+
+            {%- if collection.products_count < block.settings.grid_items_count -%}
+              {%- assign item_count = collection.products_count -%}
+            {%- endif -%}
+			
+          	{% include 'include-featured-collections', products_per: products_per, product_count: item_count, collection: collection %}
+          {%- endif -%}
+        </div>
+
+        {%- if block.settings.button_text != blank -%}
+          <div class="Container">
+            <div class="SectionFooter">
+              <a href="{{ collection.url }}" class="Button Button--primary">{{ block.settings.button_text | escape }}</a>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+  {%- endfor -%}
+</div>
+</section>
+
+{%- capture hack -%}
+{%- comment -%}This is just an ugly hack to make those variables appear as part of the theme editor in the General Settings{%- endcomment -%}
+{% if section.settings.layout_mode == 'grid' %}{{ settings.product_list_horizontal_spacing }},{{ settings.product_list_vertical_spacing }}{% endif %}
+{%- endcapture -%}
+
+{% schema %}
+{
+  "name": "Featured collections",
+  "class": "shopify-section--bordered",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Subheading",
+      "default": "Featured collection"
+    },
+    {
+      "type": "range",
+      "id": "title-font_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size of Subheading",
+      "default": 12
+    },
+    {
+      "id": "title-font_color",
+      "type": "color",
+      "label": "Text color for Subheading",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_info",
+      "label": "Show product info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatch",
+      "label": "Show color swatch",
+      "info": "Some colors appear white? [Learn more](http://support.maestrooo.com/article/80-product-uploading-custom-color-for-color-swatch).",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Grid",
+      "info": "Those settings apply only if the layout mode is set to grid."
+    },
+    {
+      "type": "select",
+      "id": "grid_mobile_items_per_row",
+      "label": "Products per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "min": 2,
+      "max": 4,
+      "id": "grid_desktop_items_per_row",
+      "label": "Products per row (desktop)",
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "info": "If none is set, collection title is used."
+        },
+        {
+          "type": "range",
+          "id": "grid_items_count",
+          "min": 4,
+          "max": 20,
+          "step": 1,
+          "label": "Products to show",
+          "default": 8
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "View all products"
+        },
+        {
+          "type": "text",
+          "id": "div_id",
+          "label": "Div ID",
+          "default": "men"
+        },
+        {
+          "type": "text",
+          "id": "button_link",
+          "label": "Link url",
+          "default": "https://alphaprimeusa.com/collections/new-release-homepage"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Collection",
+      "name": "Featured collections",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+  
+  .nav-tabs {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    list-style: none;
+    justify-content: center !important;
+    font-size: 1.2em;
+    margin: 50px 0 30px 0;
+  }
+
+  .nav-tabs .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-tabs .nav-link.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .nav-tabs .nav-tabs .nav-item {
+    margin-bottom: -1px;
+  }
+
+  .nav-tabs .nav-link {
+    border: 2px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    text-decoration: none;
+    outline: none;
+    padding: 4px 10px;
+    margin: 0px 10px;
+    text-transform: uppercase !important;
+  }
+
+  .nav-tabs .nav-link.disabled {
+    color: #6c757d;
+    background-color: transparent;
+    border-color: transparent;
+    text-decoration: none;
+  }
+
+  .nav-tabs .nav-link.active,
+  .nav-tabs .nav-item.show .nav-link {
+    color: #495057;
+    background-color: #fff;
+    border-color: #fff #fff #525252;
+    text-decoration: none;
+  }
+
+  .tab-content > .tab-pane {
+    display: block;
+    height: 0;
+    opacity: 0;
+  }
+
+  .tab-content > .active {
+    display: block;
+    height: auto;
+    opacity: 1;
+  }
+
+  .tab-content .SectionFooter {
+    text-align: right;
+    text-decoration: underline;
+    margin-top: -50px;
+    margin-bottom: 30px;
+  }
+
+ .SectionHeader.SectionHeader--center {
+    margin-top: 40px;
+  }
+  .tab-content .flickity-prev-next-button .arrow {
+    fill: #000;
+  }
+
+.thumbnail1 .price, .thumbnail1 .title {
+  display: block;
+  margin-bottom: 5px;
+  font-size: inherit;
+  line-height: 1.2;
+}
+
+.container .thumbnail1:nth-of-type(2n+1) {
+    clear: left;
+}
+
+.product-list .thumbnail, .slider-gallery .thumbnail, .list-collections .thumbnail1 {
+    position: relative;
+    text-align: center;
+    margin-bottom: 25px;
+    display: block;
+}
+
+.product-list .thumbnail1 .product-info__caption, .slider-gallery .thumbnail1 .product-info__caption, .list-collections .thumbnail1 .product-info__caption {
+    display: block;
+    margin-top: 20px;
+}
+
+.thumbnail1 .sale span.money {
+    color: #c90000;
+}
+
+.thumbnail1 .was_price span.money {
+    color: 
+    #808080;
+}
+
+.container .slider-gallery .flickity-slider .thumbnail1 {
+  width: 100% !important;
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+
+ $(document).ready(function() {
+    $('ul.nav-tabs').each(function(){
+      var active, content, links = $(this).find('a');
+      active = links.first().addClass('active');
+      content = $(active.attr('href'));
+      links.not(':first').each(function () {
+        $($(this).attr('href')).removeClass('active');
+      });
+	$(this).find('a').click(function(e){
+        active.removeClass('active');
+        content.removeClass('active');
+        active = $(this);
+        content = $($(this).attr('href'));
+        active.addClass('active');
+        content.addClass('active');
+  		content.resize();
+        return false;
+      });
+    });
+  });
+
+{% endjavascript %}

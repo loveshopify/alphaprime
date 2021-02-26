@@ -1,0 +1,90 @@
+{%- comment -%}
+This template has been created automatically by one of the Maestrooo's application (for instance: SuperFields...).
+
+We use those templates to provide additional features to our apps, and you SHOULD NOT delete this template if you
+are still using our apps. Otherwise, the apps may not work as expected.
+{%- endcomment -%}
+
+{%- layout none -%}
+
+{%- capture jsonp_callback -%}callback_maestrooo_articles_{{ search.terms | md5 }}{%- endcapture -%}
+
+{%- if search.terms contains 'handle:' or search.terms contains 'id:' -%}
+  {%- if search.terms contains 'handle:' -%}
+    {%- assign article_handle = search.terms | split: 'handle:' | last -%}
+    {%- assign article = articles[article_handle] -%}
+  {%- else -%}
+    {%- assign article = search.results.first -%}
+  {%- endif -%}
+  
+  {%- if article.handle != blank -%}
+    {{ jsonp_callback }}({
+      {%- assign url_parts = article.url | split: '/' -%}
+      {%- assign article_blog_handle = url_parts[2] -%}
+      {%- assign article_blog = blogs[article_blog_handle] -%}
+
+      "id": {{ article.id }},
+      "object": "article",
+      "blog": {
+        "id": {{ article_blog.id }},
+        "object": "blog",
+        "title": {{ article_blog.title | json }},
+        "url": {{ shop.secure_url | append: article_blog.url | json }},
+        "handle": {{ article_blog.handle | json }}
+      },
+      "title": {{ article.title | json }},
+      "url": {{ shop.secure_url | append: article.url | json }},
+      "handle": {{ article.handle | json }},
+      "image": {{ article.image.src | json }},
+      "author": {{ article.author | json }},
+      "created_at": {{ article.created_at | date: '%FT%T%:z' | json }},
+      "published_at": {{ article.published_at | date: '%FT%T%:z' | json }},
+      "tags": {{ article.tags | json }},
+      "template_suffix": {{ article.template_suffix | json }},
+    })
+  {%- else -%}
+    {{ jsonp_callback }}({})
+  {%- endif -%}
+{%- else -%}
+  {%- paginate search.results by 50 -%}
+    {%- capture articles -%}
+      [
+        {%- for article in search.results -%}
+          {%- assign url_parts = article.url | split: '/' -%}
+          {%- assign article_blog_handle = url_parts[2] -%}
+          {%- assign article_blog = blogs[article_blog_handle] -%}
+
+          {
+            "id": {{ article.id }},
+            "object": "article",
+            "blog": {
+              "id": {{ article_blog.id }},
+              "object": "blog",
+              "title": {{ article_blog.title | json }},
+              "url": {{ shop.secure_url | append: article_blog.url | json }},
+              "handle": {{ article_blog.handle | json }}
+            },
+            "title": {{ article.title | json }},
+            "url": {{ shop.secure_url | append: article.url | json }},
+            "handle": {{ article.handle | json }},
+            "image": {{ article.image.src | json }},
+            "author": {{ article.author | json }},
+            "created_at": {{ article.created_at | date: '%FT%T%:z' | json }},
+            "published_at": {{ article.published_at | date: '%FT%T%:z' | json }},
+            "tags": {{ article.tags | json }},
+            "template_suffix": {{ article.template_suffix | json }},
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    {%- endcapture -%}
+
+    {{ jsonp_callback }}({
+      "object": "list",
+      "data": {{ articles }},
+      "meta": {
+        "total_count": {{ paginate.items }},
+        "has_more": {% if paginate.next %}true{% else %}false{% endif %}
+      }
+    })
+  {%- endpaginate -%}
+{%- endif -%}
